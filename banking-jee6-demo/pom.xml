@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <groupId>nl.sogeti.jdc.demo.jee6</groupId>
+   <artifactId>banking-jee6-demo</artifactId>
+   <version>1.1-SNAPSHOT</version>
+   <packaging>war</packaging>
+
+   <name>banking-jee6-demo Web App</name>
+
+   <properties>
+
+      <!-- =================== -->
+      <!-- Dependency versions -->
+      <!-- =================== -->
+      <commons-lang.version>2.6</commons-lang.version>
+      <derby.version>10.8.1.2</derby.version>
+      <eclipse-persistence.version>2.0.0</eclipse-persistence.version>
+      <eclipselink.version>2.2.0</eclipselink.version>
+      <jdc-testtool.version>0.0.1</jdc-testtool.version>
+      <jdc-testtool-ejb.version>0.0.1</jdc-testtool-ejb.version>
+      <junit.version>4.8.2</junit.version>
+      <geronimo.version>1.0</geronimo.version>
+      <log4j.version>1.2.16</log4j.version>
+      <mockito.version>1.8.5</mockito.version>
+      <primefaces.version>2.2.1</primefaces.version>
+      <slf4j.version>1.6.1</slf4j.version>
+
+      <!-- =============== -->
+      <!-- Plugin versions -->
+      <!-- =============== -->
+      <plugin.compiler.version>2.3.2</plugin.compiler.version>
+      <plugin.dependency.version>2.1</plugin.dependency.version>
+      <plugin.surefire.version>2.9</plugin.surefire.version>
+      <plugin.war.version>2.1.1</plugin.war.version>
+
+      <!-- ================ -->
+      <!-- Project settings -->
+      <!-- ================ -->
+      <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+   </properties>
+   
+   <build>
+      <finalName>${project.artifactId}</finalName>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>${plugin.compiler.version}</version>
+            <configuration>
+               <source>1.6</source>
+               <target>1.6</target>
+               <compilerArguments>
+                  <endorseddirs>${endorsed.dir}</endorseddirs>
+               </compilerArguments>
+            </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>${plugin.war.version}</version>
+            <configuration>
+               <failOnMissingWebXml>false</failOnMissingWebXml>
+            </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>${plugin.dependency.version}</version>
+            <executions>
+               <execution>
+                  <phase>validate</phase>
+                  <goals>
+                     <goal>copy</goal>
+                  </goals>
+                  <configuration>
+                     <outputDirectory>${endorsed.dir}</outputDirectory>
+                     <silent>true</silent>
+                     <artifactItems>
+                        <artifactItem>
+                           <groupId>javax</groupId>
+                           <artifactId>javaee-endorsed-api</artifactId>
+                           <version>6.0</version>
+                           <type>jar</type>
+                        </artifactItem>
+                     </artifactItems>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+
+   </build>
+   
+   <profiles>
+      <profile>
+         <id>ci</id>
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-surefire-plugin</artifactId>
+                  <version>${plugin.surefire.version}</version>
+                  <configuration>
+                     <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*IT.java</include>
+                     </includes>
+                  </configuration>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
+      <profile>
+         <id>jelastic</id>
+         <build>
+            <plugins>
+		       <plugin>
+                  <groupId>com.jelastic</groupId>
+                  <artifactId>jelastic-maven-plugin</artifactId>
+				  <version>1.5</version>
+				  <configuration>
+                     <email>${jelastic.username}</email>
+                     <password>${jelastic.password}</password>
+                     <context>banking</context>
+                     <environment>kanters-banking</environment>
+					 <api_hoster>api.jelastic.com</api_hoster>
+                  </configuration>
+               </plugin>
+	        </plugins>
+         </build>
+      </profile>
+   </profiles>
+
+   <dependencies>
+      <!-- ====================================== -->
+      <!-- Dependencies to be included in the war -->
+      <!-- ====================================== -->
+      <dependency>
+         <groupId>org.primefaces</groupId>
+         <artifactId>primefaces</artifactId>
+         <version>${primefaces.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-api</artifactId>
+         <version>${slf4j.version}</version>
+         <scope>provided</scope>
+      </dependency>
+
+      <!-- ================= -->
+      <!-- Test dependencies -->
+      <!-- ================= -->
+<!--       <dependency>
+         <groupId>nl.sogeti.jdc.commons</groupId>
+         <artifactId>jdc-testtool</artifactId>
+         <version>${jdc-testtool.version}</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>nl.sogeti.jdc.commons</groupId>
+         <artifactId>jdc-testtool-ejb</artifactId>
+         <version>${jdc-testtool-ejb.version}</version>
+         <scope>test</scope>
+      </dependency>
+ -->      <dependency>
+         <groupId>org.apache.geronimo.specs</groupId>
+         <artifactId>geronimo-ejb_3.1_spec</artifactId>
+         <version>${geronimo.version}</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.geronimo.specs</groupId>
+         <artifactId>geronimo-jpa_2.0_spec</artifactId>
+         <version>${geronimo.version}</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.geronimo.specs</groupId>
+         <artifactId>geronimo-jaxrs_1.1_spec</artifactId>
+         <version>${geronimo.version}</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.eclipse.persistence</groupId>
+         <artifactId>javax.persistence</artifactId>
+         <version>${eclipse-persistence.version}</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.eclipse.persistence</groupId>
+         <artifactId>eclipselink</artifactId>
+         <version>${eclipselink.version}</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.mockito</groupId>
+         <artifactId>mockito-core</artifactId>
+         <version>${mockito.version}</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-log4j12</artifactId>
+         <version>${slf4j.version}</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>log4j</groupId>
+         <artifactId>log4j</artifactId>
+         <version>${log4j.version}</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>commons-lang</groupId>
+         <artifactId>commons-lang</artifactId>
+         <version>${commons-lang.version}</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.derby</groupId>
+         <artifactId>derby</artifactId>
+         <version>${derby.version}</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>${junit.version}</version>
+         <scope>test</scope>
+      </dependency>
+
+
+      <!-- ========================================================= -->
+      <!-- Provided dependencies -->
+      <!-- Dependencies that are available on the application server -->
+      <!-- ========================================================= -->
+      <dependency>
+         <groupId>javax</groupId>
+         <artifactId>javaee-web-api</artifactId>
+         <version>6.0</version>
+         <scope>provided</scope>
+      </dependency>
+
+   </dependencies>
+   
+</project>

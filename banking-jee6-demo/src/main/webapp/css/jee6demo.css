@@ -1,0 +1,17 @@
+.ui-layout
+	{
+	background: #CC3333;
+	color: #FFFFFF;
+}
+.ui-layout-bd{
+	background: #CC3333;
+	color: #FFFFFF;
+}
+.content {
+	background: #F6F6F6;
+	color: #000000;
+	height: 100%;
+}
+.myheader {
+	font-size: 15px; 
+}	

@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Class-Path: derby-10.8.1.2.jar primefaces-2.2.1.jar
+
