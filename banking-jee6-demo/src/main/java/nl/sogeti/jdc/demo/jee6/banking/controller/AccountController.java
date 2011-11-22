@@ -31,126 +31,109 @@ import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
  */
 @ManagedBean
 @ViewScoped
-public class AccountController
-{
+public class AccountController {
    @Inject
    Logger logger;
    @EJB
    BankingServiceLocal bankingService;
    @EJB
    ControllerUtil controllerUtil;
-   
+
    private UserData userData;
    private List<Account> allAccounts;
    private Account selected;
    private BigDecimal transferAmount = BigDecimal.ZERO.setScale(2);
-   
+
    /**
     * Based on the userData that is stored in the session the accounts for the selected person is retrieved (on construct).
     */
    @PostConstruct
-   public void init()
-   {
+   public void init() {
       this.userData = (UserData) this.controllerUtil.getSession(true).getAttribute("userData");
       findAllAccounts();
    }
-   
+
    /**
     * Get all the (found) accounts.
     * 
     * @return a list of accounts
     */
-   public List<Account> getAllAccounts()
-   {
+   public List<Account> getAllAccounts() {
       return this.allAccounts;
    }
-   
+
    /**
     * Saves an account to the database. If it is a new account, it will be inserted, otherwise an update will be done.
     */
-   public void save()
-   {
-      //      try
-      //      {
+   public void save() {
+      // try
+      // {
       this.logger.debug("save :: " + this.selected);
-      if (this.selected.getId() == null)
-      {
+      if (this.selected.getId() == null) {
          this.selected = this.bankingService.createAccount(this.selected);
-      }
-      else
-      {
+      } else {
          this.selected = this.bankingService.updateAccount(this.selected);
       }
       findAllAccounts();
-      //      }
-      //      catch (PersistException e)
-      //      {
-      //         this.controllerUtil.addMessage("not saved!!! beacause: " + e.getMessage());
-      //         this.controllerUtil.addCallBackParam(Constants.CALLBACK_PARAM_SAVED_FAILED, Boolean.TRUE);
-      //      }
+      // }
+      // catch (PersistException e)
+      // {
+      // this.controllerUtil.addMessage("not saved!!! beacause: " + e.getMessage());
+      // this.controllerUtil.addCallBackParam(Constants.CALLBACK_PARAM_SAVED_FAILED, Boolean.TRUE);
+      // }
    }
-   
+
    /**
     * Deposit an amount to the account.
     */
-   public void deposit()
-   {
+   public void deposit() {
       this.bankingService.deposit(this.selected, this.transferAmount);
       setTransferAmount(BigDecimal.ZERO.setScale(2));
    }
-   
+
    /**
     * Withdraw an amount from the account.
     */
-   public void withdraw()
-   {
+   public void withdraw() {
       this.bankingService.withdraw(this.selected, this.transferAmount);
       setTransferAmount(BigDecimal.ZERO.setScale(2));
    }
-   
+
    /**
     * Create a new account object. (just the object. do not store it!)
     */
-   public void newAccount()
-   {
+   public void newAccount() {
       this.logger.debug("newAccount() :: " + this.selected);
       Account account = new Account(getOwner());
       account.setOwner(getOwner());
       setSelected(account);
    }
-   
-   public BigDecimal getTransferAmount()
-   {
+
+   public BigDecimal getTransferAmount() {
       return this.transferAmount;
    }
-   
-   public void setTransferAmount(BigDecimal transferAmount)
-   {
+
+   public void setTransferAmount(BigDecimal transferAmount) {
       this.transferAmount = transferAmount;
    }
-   
-   public Account getSelected()
-   {
+
+   public Account getSelected() {
       return this.selected;
    }
-   
-   public void setSelected(Account selected)
-   {
+
+   public void setSelected(Account selected) {
       this.selected = selected;
    }
-   
-   public void rowEvent()
-   {
+
+   public void rowEvent() {
       this.logger.debug("rowSelected() :: " + this.selected);
    }
-   
-   private void findAllAccounts()
-   {
+
+   private void findAllAccounts() {
       this.allAccounts = this.bankingService.findAccountsFor(getOwner());
    }
-   
-   public Person getOwner()
-   {
+
+   public Person getOwner() {
       return this.userData.getSelectedPerson();
    }
 }

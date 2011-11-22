@@ -30,35 +30,32 @@ import nl.sogeti.jdc.demo.jee6.banking.entity.Account;
  */
 @Stateless
 @Path("account")
-public class AccountRestService
-{
+public class AccountRestService {
    @Inject
    Logger logger;
-   
+
    @EJB
    BankingServiceLocal bankingService;
-   
+
    @GET
    @Path("{accountNumber}")
    @Produces(MediaType.TEXT_PLAIN)
-   public String getBalance(@PathParam("accountNumber") String accountNumber)
-   {
+   public String getBalance(@PathParam("accountNumber") String accountNumber) {
       Account account = this.bankingService.findAccountByNumber(accountNumber);
-      if (account != null)
-      {
+      if (account != null) {
          return account.getBalans().toPlainString();
       }
       return "";
    }
-   
+
    @POST
    @Path("{accountNumber}")
-   public Response transfer(@PathParam("accountNumber") String accountNumber, @QueryParam("toAccountNumber") String toAccountNumber, @QueryParam("amount") BigDecimal amount)
-   {
+   public Response transfer(@PathParam("accountNumber") String accountNumber, @QueryParam("toAccountNumber") String toAccountNumber,
+         @QueryParam("amount") BigDecimal amount) {
       if (this.bankingService.transfer(accountNumber, toAccountNumber, amount))
          return ok().build();
-      
+
       return Response.notModified(accountNumber).build();
    }
-   
+
 }

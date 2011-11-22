@@ -9,12 +9,10 @@ import java.beans.PropertyEditorManager;
 /**
  * @author kanteriv
  */
-public enum DebetCreditEnum
-{
+public enum DebetCreditEnum {
    DEBET, CREDIT;
-   static
-   {
+   static {
       PropertyEditorManager.registerEditor(DebetCreditEnum.class, DebetCreditEnumEditor.class);
    }
-   
+
 }

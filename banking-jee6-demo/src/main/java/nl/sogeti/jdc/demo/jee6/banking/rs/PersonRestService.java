@@ -27,46 +27,41 @@ import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
  */
 @Stateless
 @Path("person")
-public class PersonRestService
-{
+public class PersonRestService {
    @Inject
    Logger logger;
-   
+
    @EJB
    BankingServiceLocal bankingService;
-   
+
    @GET
    @Path("{clientId}")
    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-   public Person getPerson(@PathParam("clientId") String clientId)
-   {
+   public Person getPerson(@PathParam("clientId") String clientId) {
       Person person = this.bankingService.findPersonByClientId(clientId);
-      
+
       return person;
    }
-   
+
    @POST
    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-   public Person insertPerson(Person person)
-   {
+   public Person insertPerson(Person person) {
       Person insertedPerson = this.bankingService.createPerson(person);
-      
+
       return insertedPerson;
    }
-   
+
    @PUT
    @Path("{clientId}")
    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-   public Response updatePerson(@PathParam("clientId") String clientId, Person person)
-   {
-      if (clientId.equals(person.getClientId()))
-      {
+   public Response updatePerson(@PathParam("clientId") String clientId, Person person) {
+      if (clientId.equals(person.getClientId())) {
          this.bankingService.updatePerson(person);
          return Response.ok().build();
       }
       return Response.notModified(clientId).build();
-      
+
    }
-   
+
 }

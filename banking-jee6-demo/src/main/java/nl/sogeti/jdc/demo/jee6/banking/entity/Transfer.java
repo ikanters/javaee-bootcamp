@@ -18,8 +18,7 @@ import javax.persistence.TemporalType;
  * @author kanteriv
  */
 @Entity
-public class Transfer extends AbstractEntity
-{
+public class Transfer extends AbstractEntity {
    private static final long serialVersionUID = -574131230870694154L;
    @Column(nullable = false)
    private String owner;
@@ -30,34 +29,29 @@ public class Transfer extends AbstractEntity
    @Column(nullable = false)
    @Temporal(TemporalType.DATE)
    private Date transferDate;
-   
-   protected Transfer()
-   {
+
+   protected Transfer() {
       super();
    }
-   
-   public Transfer(String owner, String other, BigDecimal amount)
-   {
+
+   public Transfer(String owner, String other, BigDecimal amount) {
       super();
       this.owner = owner;
       this.other = other;
       this.amount = amount;
       this.transferDate = new Date();
    }
-   
+
    @PrePersist
-   protected void prePersist()
-   {
-      if (this.amount != null && this.amount.scale() != 2)
-      {
+   protected void prePersist() {
+      if (this.amount != null && this.amount.scale() != 2) {
          this.amount = this.amount.setScale(2, RoundingMode.HALF_UP);
       }
    }
-   
+
    @Override
-   public String toString()
-   {
+   public String toString() {
       return "Transfer{" + "owner=" + this.owner + ", other=" + this.other + ", amount=" + this.amount + ", transferDate=" + this.transferDate + '}';
    }
-   
+
 }

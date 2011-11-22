@@ -18,32 +18,27 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @MappedSuperclass
 @XmlAccessorType(XmlAccessType.FIELD)
-public abstract class AbstractEntity implements Serializable
-{
+public abstract class AbstractEntity implements Serializable {
    private static final long serialVersionUID = -5009482244229344305L;
    @Id
    @GeneratedValue
    @XmlTransient
    private Long id;
-   
-   public AbstractEntity()
-   {
+
+   public AbstractEntity() {
       super();
    }
-   
-   public AbstractEntity(AbstractEntity entity)
-   {
+
+   public AbstractEntity(AbstractEntity entity) {
       super();
       this.id = entity.getId();
    }
-   
-   public Long getId()
-   {
+
+   public Long getId() {
       return this.id;
    }
-   
-   public void setId(Long id)
-   {
+
+   public void setId(Long id) {
       this.id = id;
    }
 }

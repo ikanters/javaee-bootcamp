@@ -23,10 +23,9 @@ import nl.sogeti.jdc.demo.jee6.banking.constants.DebetCreditEnum;
  * @author kanteriv
  */
 @Entity
-public class AccountLog extends AbstractEntity
-{
+public class AccountLog extends AbstractEntity {
    private static final long serialVersionUID = -1957693851717081899L;
-   
+
    @ManyToOne(optional = false)
    private Account account;
    @ManyToOne(optional = true)
@@ -38,33 +37,28 @@ public class AccountLog extends AbstractEntity
    private BigDecimal amount;
    @Temporal(TemporalType.TIMESTAMP)
    private Date logTimestamp;
-   
-   protected AccountLog()
-   {
+
+   protected AccountLog() {
       super();
    }
-   
-   public AccountLog(Account account, BigDecimal amount, DebetCreditEnum aspect)
-   {
+
+   public AccountLog(Account account, BigDecimal amount, DebetCreditEnum aspect) {
       super();
       this.account = account;
       this.amount = amount;
       this.aspect = aspect;
       this.logTimestamp = new Date();
-      
+
    }
-   
-   public AccountLog(Account account, Account other, BigDecimal amount, DebetCreditEnum aspect)
-   {
+
+   public AccountLog(Account account, Account other, BigDecimal amount, DebetCreditEnum aspect) {
       this(account, amount, aspect);
       this.other = other;
    }
-   
+
    @PrePersist
-   protected void prePersist()
-   {
-      if (this.amount != null && this.amount.scale() != 2)
-      {
+   protected void prePersist() {
+      if (this.amount != null && this.amount.scale() != 2) {
          this.amount = this.amount.setScale(2, RoundingMode.HALF_UP);
       }
    }

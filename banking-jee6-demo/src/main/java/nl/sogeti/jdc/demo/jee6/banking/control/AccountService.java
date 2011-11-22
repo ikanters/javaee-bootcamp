@@ -27,68 +27,58 @@ import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
 @ControlService
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
-public class AccountService extends AbstractCrudService<Account>
-{
+public class AccountService extends AbstractCrudService<Account> {
    @Inject
    Logger logger;
-   
+
    @Override
-   protected Class<Account> getEntityClass()
-   {
+   protected Class<Account> getEntityClass() {
       return Account.class;
    }
-   
+
    @Interceptors({ TransferAudit.class, AccountAudit.class })
-   //   @RolesAllowed({ "ADMIN", "MANAGER", "OWNER" })
-   public boolean transfer(Account from, Account to, BigDecimal amount)
-   {
-      if (from != null && to != null && amount != null)
-      {
+   // @RolesAllowed({ "ADMIN", "MANAGER", "OWNER" })
+   public boolean transfer(Account from, Account to, BigDecimal amount) {
+      if (from != null && to != null && amount != null) {
          from.substractAmount(amount);
          to.addAmount(amount);
          return true;
       }
       return false;
    }
-   
+
    @Interceptors(AccountAudit.class)
-   //   @RolesAllowed({ "ADMIN", "MANAGER" })
-   public void deposit(Account account, BigDecimal amount)
-   {
+   // @RolesAllowed({ "ADMIN", "MANAGER" })
+   public void deposit(Account account, BigDecimal amount) {
       this.logger.debug("deposit(" + account.getNumber() + ", " + amount + ")");
-      
+
       account.addAmount(amount);
       update(account);
    }
-   
+
    @Interceptors(AccountAudit.class)
-   //   @RolesAllowed({ "ADMIN", "MANAGER" })
-   public boolean withdraw(Account account, BigDecimal amount)
-   {
-      if (account.substractAmount(amount))
-      {
+   // @RolesAllowed({ "ADMIN", "MANAGER" })
+   public boolean withdraw(Account account, BigDecimal amount) {
+      if (account.substractAmount(amount)) {
          update(account);
          return true;
       }
       return false;
    }
-   
+
    @SuppressWarnings("unchecked")
-   public List<Account> findAccountsFor(Person selectedPerson)
-   {
+   public List<Account> findAccountsFor(Person selectedPerson) {
       final Query query = createNamedQuery(Account.FIND_ACCOUNTS_FOR_PERSON_NAMEDQUERY);
       query.setParameter(Account.OWNER_PARAM, selectedPerson);
       return query.getResultList();
    }
-   
+
    @SuppressWarnings("unchecked")
-   public Account findAccount(String accountNumber)
-   {
+   public Account findAccount(String accountNumber) {
       final Query query = createNamedQuery(Account.FIND_ACCOUNT_BY_NUMBER_NAMEDQUERY);
       query.setParameter(Account.NUMBER_PARAM, accountNumber);
       List<Account> resultList = query.getResultList();
-      if (resultList.size() == 1)
-      {
+      if (resultList.size() == 1) {
          return resultList.get(0);
       }
       return null;

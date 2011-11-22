@@ -16,13 +16,11 @@ import nl.sogeti.jdc.demo.jee6.banking.entity.AccountLog;
 @ControlService
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
-public class AccountLogService extends AbstractCrudService<AccountLog>
-{
-   
+public class AccountLogService extends AbstractCrudService<AccountLog> {
+
    @Override
-   protected Class<AccountLog> getEntityClass()
-   {
+   protected Class<AccountLog> getEntityClass() {
       return AccountLog.class;
    }
-   
+
 }

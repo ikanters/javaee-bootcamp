@@ -1,14 +1,6 @@
-/*------------------------------------------------------------------------------
- **     Ident: Delivery Center Java
- **    Author: kanteriv
- ** Copyright: (c) 20 sep. 2011 Sogeti Nederland B.V. All Rights Reserved.
- **------------------------------------------------------------------------------
- ** Sogeti Nederland B.V.            |  No part of this file may be reproduced  
- ** Distributed Software Engineering |  or transmitted in any form or by any        
- ** Lange Dreef 17                   |  means, electronic or mechanical, for the      
- ** 4131 NJ Vianen                   |  purpose, without the express written    
- ** The Netherlands                  |  permission of the copyright holder.
- *------------------------------------------------------------------------------
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
  */
 package nl.sogeti.jdc.demo.jee6.banking.exception;
 
@@ -18,46 +10,43 @@ package nl.sogeti.jdc.demo.jee6.banking.exception;
  * @version $Id:$
  * @author kanteriv (c) 20 sep. 2011, Sogeti Nederland B.V.
  */
-public class ApplicationException extends RuntimeException
-{
-   
+public class ApplicationException extends RuntimeException {
+
+   private static final long serialVersionUID = -7094731954973105186L;
+
    /**
     * Constructor: create a new ApplicationException.
     */
-   public ApplicationException()
-   {
+   public ApplicationException() {
       super();
    }
-   
+
    /**
     * Constructor: create a new ApplicationException.
     * 
     * @param message
     */
-   public ApplicationException(String message)
-   {
+   public ApplicationException(String message) {
       super(message);
    }
-   
+
    /**
     * Constructor: create a new ApplicationException.
     * 
     * @param cause
     */
-   public ApplicationException(Throwable cause)
-   {
+   public ApplicationException(Throwable cause) {
       super(cause);
    }
-   
+
    /**
     * Constructor: create a new ApplicationException.
     * 
     * @param message
     * @param cause
     */
-   public ApplicationException(String message, Throwable cause)
-   {
+   public ApplicationException(String message, Throwable cause) {
       super(message, cause);
    }
-   
+
 }

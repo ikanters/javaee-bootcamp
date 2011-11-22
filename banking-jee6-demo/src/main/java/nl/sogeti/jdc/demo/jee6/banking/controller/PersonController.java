@@ -13,20 +13,18 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
-import org.slf4j.Logger;
-
 import nl.sogeti.jdc.demo.jee6.banking.boundary.BankingServiceLocal;
-import nl.sogeti.jdc.demo.jee6.banking.constants.Constants;
 import nl.sogeti.jdc.demo.jee6.banking.controller.util.ControllerUtil;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
+
+import org.slf4j.Logger;
 
 /**
  * @author kanteriv
  */
 @ManagedBean
 @ViewScoped
-public class PersonController implements Serializable
-{
+public class PersonController implements Serializable {
    private static final long serialVersionUID = 23452345234L;
    @Inject
    Logger logger;
@@ -34,94 +32,79 @@ public class PersonController implements Serializable
    UserData userData;
    @EJB
    BankingServiceLocal bankingService;
-   
+
    @EJB
    ControllerUtil controllerUtil;
-   
+
    @Inject
    int numberOfRows;
-   
+
    private List<Person> allPersons;
-   
+
    @PostConstruct
-   public void init()
-   {
+   public void init() {
       this.logger.debug("init; PersonController.");
       this.controllerUtil.getSession(true).setAttribute("userData", this.userData);
-      
+
       selectAll();
    }
-   
-   public void save()
-   {
+
+   public void save() {
       this.logger.debug("save :: " + getSelected());
-      //      try
-      //      {
-      if (getSelected().getId() == null)
-      {
+      // try
+      // {
+      if (getSelected().getId() == null) {
          this.bankingService.createPerson(getSelected());
-      }
-      else
-      {
+      } else {
          this.bankingService.updatePerson(getSelected());
       }
       selectAll();
       setSelected(getPersonFromList(getSelected().getClientId()));
-      this.controllerUtil.addCallBackParam(Constants.CALLBACK_PARAM_SAVED_FAILED, Boolean.FALSE);
-      //      }
-      //      catch (PersistException e)
-      //      {
-      //         this.controllerUtil.addMessage("not saved!!! beacause: " + e.getMessage());
-      //         this.controllerUtil.addCallBackParam(Constants.CALLBACK_PARAM_SAVED_FAILED, Boolean.TRUE);
-      //      }
+      // this.controllerUtil.addCallBackParam(Constants.CALLBACK_PARAM_SAVED_FAILED, Boolean.FALSE);
+      // }
+      // catch (PersistException e)
+      // {
+      // this.controllerUtil.addMessage("not saved!!! beacause: " + e.getMessage());
+      // this.controllerUtil.addCallBackParam(Constants.CALLBACK_PARAM_SAVED_FAILED, Boolean.TRUE);
+      // }
    }
-   
-   public void newPerson()
-   {
+
+   public void newPerson() {
       this.logger.debug("newPerson()");
       setSelected(new Person());
    }
-   
-   public int getNumberOfRows()
-   {
+
+   public int getNumberOfRows() {
       return this.numberOfRows;
    }
-   
-   public Person getSelected()
-   {
+
+   public Person getSelected() {
       return this.userData.getSelectedPerson();
    }
-   
-   public void setSelected(Person selected)
-   {
+
+   public void setSelected(Person selected) {
       this.logger.debug("setSelected(" + selected + ")");
       this.userData.setSelectedPerson(selected);
    }
-   
-   public void rowEvent()
-   {
+
+   public void rowEvent() {
       // Nothing to do
    }
-   
-   public List<Person> getAllPersons()
-   {
+
+   public List<Person> getAllPersons() {
       return this.allPersons;
    }
-   
-   private Person getPersonFromList(String clientId)
-   {
-      for (Person person : getAllPersons())
-      {
-         if (person.getClientId().equals(clientId))
-         {
+
+   private Person getPersonFromList(String clientId) {
+      for (Person person : getAllPersons()) {
+         if (person.getClientId().equals(clientId)) {
             return person;
          }
       }
       return null;
    }
-   
-   private void selectAll()
-   {
+
+   private void selectAll() {
       this.logger.debug("selectAll");
       this.allPersons = this.bankingService.findAllPersons();
    }

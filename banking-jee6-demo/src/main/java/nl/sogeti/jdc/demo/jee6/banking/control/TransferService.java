@@ -16,12 +16,10 @@ import nl.sogeti.jdc.demo.jee6.banking.entity.Transfer;
 @ControlService
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
-public class TransferService extends AbstractCrudService<Transfer>
-{
+public class TransferService extends AbstractCrudService<Transfer> {
    @Override
-   protected Class<Transfer> getEntityClass()
-   {
+   protected Class<Transfer> getEntityClass() {
       return Transfer.class;
    }
-   
+
 }
