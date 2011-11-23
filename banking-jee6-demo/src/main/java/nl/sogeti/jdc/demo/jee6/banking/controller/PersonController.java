@@ -14,8 +14,10 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import nl.sogeti.jdc.demo.jee6.banking.boundary.BankingServiceLocal;
+import nl.sogeti.jdc.demo.jee6.banking.constants.Constants;
 import nl.sogeti.jdc.demo.jee6.banking.controller.util.ControllerUtil;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
+import nl.sogeti.jdc.demo.jee6.banking.exception.TransactionRollbackException;
 
 import org.slf4j.Logger;
 
@@ -25,6 +27,7 @@ import org.slf4j.Logger;
 @ManagedBean
 @ViewScoped
 public class PersonController implements Serializable {
+
    private static final long serialVersionUID = 23452345234L;
    @Inject
    Logger logger;
@@ -32,10 +35,8 @@ public class PersonController implements Serializable {
    UserData userData;
    @EJB
    BankingServiceLocal bankingService;
-
    @EJB
    ControllerUtil controllerUtil;
-
    @Inject
    int numberOfRows;
 
@@ -51,22 +52,19 @@ public class PersonController implements Serializable {
 
    public void save() {
       this.logger.debug("save :: " + getSelected());
-      // try
-      // {
-      if (getSelected().getId() == null) {
-         this.bankingService.createPerson(getSelected());
-      } else {
-         this.bankingService.updatePerson(getSelected());
+      try {
+         if (getSelected().getId() == null) {
+            this.bankingService.createPerson(getSelected());
+         } else {
+            this.bankingService.updatePerson(getSelected());
+         }
+         selectAll();
+         setSelected(getPersonFromList(getSelected().getClientId()));
+         this.controllerUtil.addCallBackParam(Constants.CALLBACK_PARAM_SAVED_FAILED, Boolean.FALSE);
+      } catch (TransactionRollbackException e) {
+         this.controllerUtil.addMessage(e.getMessage());
+         this.controllerUtil.addCallBackParam(Constants.CALLBACK_PARAM_SAVED_FAILED, Boolean.TRUE);
       }
-      selectAll();
-      setSelected(getPersonFromList(getSelected().getClientId()));
-      // this.controllerUtil.addCallBackParam(Constants.CALLBACK_PARAM_SAVED_FAILED, Boolean.FALSE);
-      // }
-      // catch (PersistException e)
-      // {
-      // this.controllerUtil.addMessage("not saved!!! beacause: " + e.getMessage());
-      // this.controllerUtil.addCallBackParam(Constants.CALLBACK_PARAM_SAVED_FAILED, Boolean.TRUE);
-      // }
    }
 
    public void newPerson() {

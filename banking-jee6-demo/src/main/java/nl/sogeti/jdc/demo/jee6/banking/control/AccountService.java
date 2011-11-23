@@ -37,7 +37,6 @@ public class AccountService extends AbstractCrudService<Account> {
    }
 
    @Interceptors({ TransferAudit.class, AccountAudit.class })
-   // @RolesAllowed({ "ADMIN", "MANAGER", "OWNER" })
    public boolean transfer(Account from, Account to, BigDecimal amount) {
       if (from != null && to != null && amount != null) {
          from.substractAmount(amount);
@@ -48,19 +47,17 @@ public class AccountService extends AbstractCrudService<Account> {
    }
 
    @Interceptors(AccountAudit.class)
-   // @RolesAllowed({ "ADMIN", "MANAGER" })
    public void deposit(Account account, BigDecimal amount) {
       this.logger.debug("deposit(" + account.getNumber() + ", " + amount + ")");
 
       account.addAmount(amount);
-      update(account);
+      merge(account);
    }
 
    @Interceptors(AccountAudit.class)
-   // @RolesAllowed({ "ADMIN", "MANAGER" })
    public boolean withdraw(Account account, BigDecimal amount) {
       if (account.substractAmount(amount)) {
-         update(account);
+         merge(account);
          return true;
       }
       return false;

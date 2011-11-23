@@ -27,7 +27,6 @@ public class PersonService extends AbstractCrudService<Person> {
    }
 
    @SuppressWarnings("unchecked")
-   // @RolesAllowed({ "admin", "employee" })
    public List<Person> findAll() {
       final Query namedQuery = createNamedQuery(Person.FIND_ALL_NAMEDQUERY);
       return namedQuery.getResultList();
@@ -38,19 +37,17 @@ public class PersonService extends AbstractCrudService<Person> {
    }
 
    /**
-    * @see nl.sogeti.jdc.demo.jee6.banking.control.AbstractCrudService#update(nl.sogeti.jdc.demo.jee6.banking.entity.AbstractEntity)
+    * @see nl.sogeti.jdc.demo.jee6.banking.control.AbstractCrudService#merge(nl.sogeti.jdc.demo.jee6.banking.entity.AbstractEntity)
     */
    @Override
-   // @RolesAllowed({ "ADMIN", "MANAGER", "OWNER" })
-   public Person update(Person entity) {
-      return super.update(entity);
+   public Person merge(Person entity) {
+      return super.merge(entity);
    }
 
    /**
     * @param clientId
     * @return the found person (or null if not found).
     */
-   // @RolesAllowed({ "ADMIN", "MANAGER" })
    public Person findByClientId(String clientId) {
       final Query namedQuery = createNamedQuery(Person.FIND_BY_CLIENTID);
       namedQuery.setParameter(Person.CLIENTID_PARAMNAME, clientId);

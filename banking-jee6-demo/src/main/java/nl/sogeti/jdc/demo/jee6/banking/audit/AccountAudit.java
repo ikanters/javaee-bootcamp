@@ -65,7 +65,7 @@ public class AccountAudit {
       Object result = ic.proceed();
 
       for (AccountLog accountLog : logs) {
-         this.accountLogService.create(accountLog);
+         this.accountLogService.persist(accountLog);
       }
       return result;
    }

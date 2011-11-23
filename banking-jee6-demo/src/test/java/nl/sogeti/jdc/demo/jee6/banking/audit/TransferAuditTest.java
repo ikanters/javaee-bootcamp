@@ -18,7 +18,7 @@ import nl.sogeti.jdc.demo.jee6.banking.control.TransferService;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Transfer;
 
 /**
- * @author kanteriv
+ * @author kanteriv 
  */
 public class TransferAuditTest
 {
@@ -97,7 +97,7 @@ public class TransferAuditTest
       Method method = this.getClass().getDeclaredMethod(methodName);
       Object[] parameters = new Object[] { "1", "2", BigDecimal.TEN };
       // this one is correct so a create on the transferservice is expected.
-      this.transferServiceMock.create((Transfer) Matchers.anyObject());
+      this.transferServiceMock.persist((Transfer) Matchers.anyObject());
       testInvocation(method, parameters, methodName);
    }
    

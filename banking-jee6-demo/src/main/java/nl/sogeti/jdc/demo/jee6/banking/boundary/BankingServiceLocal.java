@@ -9,6 +9,7 @@ import java.util.List;
 
 import nl.sogeti.jdc.demo.jee6.banking.entity.Account;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
+import nl.sogeti.jdc.demo.jee6.banking.exception.TransactionRollbackException;
 
 /**
  * @author kanteriv
@@ -19,7 +20,7 @@ public interface BankingServiceLocal extends BankingServiceRemote {
 
    int countPersons();
 
-   Person createPerson(Person person);
+   Person createPerson(Person person) throws TransactionRollbackException;
 
    Person updatePerson(Person person);
 

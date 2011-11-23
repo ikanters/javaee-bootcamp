@@ -17,10 +17,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.slf4j.Logger;
-
 import nl.sogeti.jdc.demo.jee6.banking.boundary.BankingServiceLocal;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
+import nl.sogeti.jdc.demo.jee6.banking.exception.TransactionRollbackException;
+
+import org.slf4j.Logger;
 
 /**
  * @author kanteriv
@@ -47,7 +48,13 @@ public class PersonRestService {
    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
    public Person insertPerson(Person person) {
-      Person insertedPerson = this.bankingService.createPerson(person);
+      Person insertedPerson;
+      try {
+         insertedPerson = this.bankingService.createPerson(person);
+      } catch (TransactionRollbackException e) {
+         logger.error("person not created because:" + e.getMessage(), e);
+         return null;
+      }
 
       return insertedPerson;
    }

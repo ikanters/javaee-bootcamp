@@ -27,15 +27,19 @@ public class AccountLog extends AbstractEntity {
    private static final long serialVersionUID = -1957693851717081899L;
 
    @ManyToOne(optional = false)
+   @SuppressWarnings("unused")
    private Account account;
    @ManyToOne(optional = true)
+   @SuppressWarnings("unused")
    private Account other;
    @Column(nullable = false)
    @Enumerated(EnumType.STRING)
+   @SuppressWarnings("unused")
    private DebetCreditEnum aspect;
    @Column(nullable = false)
    private BigDecimal amount;
    @Temporal(TemporalType.TIMESTAMP)
+   @SuppressWarnings("unused")
    private Date logTimestamp;
 
    protected AccountLog() {

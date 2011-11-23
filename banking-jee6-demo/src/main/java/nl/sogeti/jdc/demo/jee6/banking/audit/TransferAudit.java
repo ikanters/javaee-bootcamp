@@ -56,7 +56,7 @@ public class TransferAudit {
       Object result = ic.proceed();
 
       if (transfer != null) {
-         this.auditService.create(transfer);
+         this.auditService.persist(transfer);
       }
       return result;
    }

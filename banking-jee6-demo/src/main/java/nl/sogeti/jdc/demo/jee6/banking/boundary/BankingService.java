@@ -18,6 +18,7 @@ import nl.sogeti.jdc.demo.jee6.banking.control.AccountService;
 import nl.sogeti.jdc.demo.jee6.banking.control.PersonService;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Account;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
+import nl.sogeti.jdc.demo.jee6.banking.exception.TransactionRollbackException;
 
 /**
  * @author kanteriv
@@ -56,17 +57,26 @@ public class BankingService implements BankingServiceLocal {
    }
 
    @Override
-   public Person createPerson(Person person) {
+   public Person createPerson(Person person) throws TransactionRollbackException {
       // Make sure the id is not pre-set!
       person.setId(null);
-      return this.personService.create(person);
+      try {
+         Person saved = this.personService.persist(person);
+         this.personService.flush();
+         return saved;
+      } catch (RuntimeException e) {
+         // In case the Local interface is used the object is refered to as a refference. During the persist the id is set,
+         // and during the flush the exception is thrown. Therefore the id must be reset to null.
+         person.setId(null);
+         throw new TransactionRollbackException(e);
+      }
    }
 
    @Override
    public Person updatePerson(Person person) {
       // Set the id by searching the correct entity based on the logical key.
       person.setId(this.personService.findByClientId(person.getClientId()).getId());
-      return this.personService.update(person);
+      return this.personService.merge(person);
    }
 
    @Override
@@ -100,11 +110,11 @@ public class BankingService implements BankingServiceLocal {
    public Account createAccount(Account account) {
       // Make sure the id is not pre-set!
       account.setId(null);
-      return this.accountService.create(account);
+      return this.accountService.persist(account);
    }
 
    @Override
    public Account updateAccount(Account account) {
-      return this.accountService.update(account);
+      return this.accountService.merge(account);
    }
 }
