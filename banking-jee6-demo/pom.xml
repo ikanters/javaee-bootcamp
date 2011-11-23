@@ -18,8 +18,6 @@
       <derby.version>10.8.1.2</derby.version>
       <eclipse-persistence.version>2.0.0</eclipse-persistence.version>
       <eclipselink.version>2.2.0</eclipselink.version>
-      <jdc-testtool.version>0.0.1</jdc-testtool.version>
-      <jdc-testtool-ejb.version>0.0.1</jdc-testtool-ejb.version>
       <junit.version>4.8.2</junit.version>
       <geronimo.version>1.0</geronimo.version>
       <log4j.version>1.2.16</log4j.version>
@@ -50,8 +48,8 @@
             <artifactId>maven-compiler-plugin</artifactId>
             <version>${plugin.compiler.version}</version>
             <configuration>
-               <source>1.6</source>
-               <target>1.6</target>
+               <source>1.7</source>
+               <target>1.7</target>
                <compilerArguments>
                   <endorseddirs>${endorsed.dir}</endorseddirs>
                </compilerArguments>
@@ -141,26 +139,7 @@
                </plugin>
             </plugins>
          </build>
-      </profile>
-      <profile>
-         <id>jelastic</id>
-         <build>
-            <plugins>
-		       <plugin>
-                  <groupId>com.jelastic</groupId>
-                  <artifactId>jelastic-maven-plugin</artifactId>
-				  <version>1.5</version>
-				  <configuration>
-                     <email>${jelastic.username}</email>
-                     <password>${jelastic.password}</password>
-                     <context>banking</context>
-                     <environment>kanters-banking</environment>
-					 <api_hoster>api.jelastic.com</api_hoster>
-                  </configuration>
-               </plugin>
-	        </plugins>
-         </build>
-      </profile>
+      </profile>     
    </profiles>
 
    <dependencies>
@@ -182,19 +161,7 @@
       <!-- ================= -->
       <!-- Test dependencies -->
       <!-- ================= -->
-<!--       <dependency>
-         <groupId>nl.sogeti.jdc.commons</groupId>
-         <artifactId>jdc-testtool</artifactId>
-         <version>${jdc-testtool.version}</version>
-         <scope>test</scope>
-      </dependency>
       <dependency>
-         <groupId>nl.sogeti.jdc.commons</groupId>
-         <artifactId>jdc-testtool-ejb</artifactId>
-         <version>${jdc-testtool-ejb.version}</version>
-         <scope>test</scope>
-      </dependency>
- -->      <dependency>
          <groupId>org.apache.geronimo.specs</groupId>
          <artifactId>geronimo-ejb_3.1_spec</artifactId>
          <version>${geronimo.version}</version>
