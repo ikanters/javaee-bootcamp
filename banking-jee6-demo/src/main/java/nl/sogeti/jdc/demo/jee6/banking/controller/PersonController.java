@@ -6,6 +6,10 @@ package nl.sogeti.jdc.demo.jee6.banking.controller;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -18,6 +22,7 @@ import nl.sogeti.jdc.demo.jee6.banking.constants.Constants;
 import nl.sogeti.jdc.demo.jee6.banking.controller.util.ControllerUtil;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
 import nl.sogeti.jdc.demo.jee6.banking.exception.TransactionRollbackException;
+import nl.sogeti.jdc.demo.jee6.banking.rs.client.SlowRestClient;
 
 import org.slf4j.Logger;
 
@@ -37,10 +42,14 @@ public class PersonController implements Serializable {
    BankingServiceLocal bankingService;
    @EJB
    ControllerUtil controllerUtil;
+   @EJB
+   SlowRestClient slowRestClient;
    @Inject
    int numberOfRows;
 
    private List<Person> allPersons;
+
+   private String timespend = "";
 
    @PostConstruct
    public void init() {
@@ -57,6 +66,17 @@ public class PersonController implements Serializable {
             this.bankingService.createPerson(getSelected());
          } else {
             this.bankingService.updatePerson(getSelected());
+         }
+         Future<Integer> result = this.slowRestClient.callSlowMethod(0);
+         try {
+            setTimespend("" + result.get(500, TimeUnit.MILLISECONDS));
+         } catch (TimeoutException e) {
+            setTimespend("> 500");
+
+         } catch (InterruptedException | ExecutionException e) {
+            // TODO Auto-generated catch block
+            throw new RuntimeException("TODO (kanteriv) handle this Auto-generated exception", e);
+
          }
          selectAll();
          setSelected(getPersonFromList(getSelected().getClientId()));
@@ -105,5 +125,13 @@ public class PersonController implements Serializable {
    private void selectAll() {
       this.logger.debug("selectAll");
       this.allPersons = this.bankingService.findAllPersons();
+   }
+
+   public String getTimespend() {
+      return this.timespend;
+   }
+
+   public void setTimespend(String timespend) {
+      this.timespend = timespend;
    }
 }

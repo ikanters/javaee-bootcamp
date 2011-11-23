@@ -5,7 +5,13 @@
 <ui:composition template="/WEB-INF/template/template.xhtml">
    <ui:define name="content">
       <h:form id="listForm">
+        <h:outputText value="(last) timespend = #{personController.timespend}" rendered="#{not empty personController.timespend}"/>
+      
          <p:panel id="listPanel" header="Person list">
+                  <f:facet name="footer">
+        <h:outputText value="(last) timespend = #{personController.timespend}" rendered="#{not empty personController.timespend}"/>
+                  </f:facet>
+        
             <p:dataTable id="dataTable" var="person" value="#{personController.allPersons}" selection="#{personController.selected}" selectionMode="single"
                rowSelectListener="#{personController.rowEvent()}" rowUnselectListener="#{personController.rowEvent()}" onRowUnselectUpdate=":listForm:buttons"
                onRowSelectUpdate=":listForm:buttons,:editForm:panelGrid" paginator="true" rows="#{personController.numberOfRows}" >

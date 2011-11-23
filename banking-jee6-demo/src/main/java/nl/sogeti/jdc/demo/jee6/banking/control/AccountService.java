@@ -10,16 +10,18 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.persistence.Query;
-
-import org.slf4j.Logger;
 
 import nl.sogeti.jdc.demo.jee6.banking.audit.AccountAudit;
 import nl.sogeti.jdc.demo.jee6.banking.audit.TransferAudit;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Account;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
+import nl.sogeti.jdc.demo.jee6.banking.monitor.WatchDog;
+
+import org.slf4j.Logger;
 
 /**
  * @author kanteriv
@@ -31,6 +33,9 @@ public class AccountService extends AbstractCrudService<Account> {
    @Inject
    Logger logger;
 
+   @Inject
+   Event<WatchDog> monitoring;
+
    @Override
    protected Class<Account> getEntityClass() {
       return Account.class;
@@ -39,7 +44,10 @@ public class AccountService extends AbstractCrudService<Account> {
    @Interceptors({ TransferAudit.class, AccountAudit.class })
    public boolean transfer(Account from, Account to, BigDecimal amount) {
       if (from != null && to != null && amount != null) {
-         from.substractAmount(amount);
+         if (!from.substractAmount(amount)) {
+            fireEvent(from, amount);
+            return false;
+         }
          to.addAmount(amount);
          return true;
       }
@@ -51,16 +59,26 @@ public class AccountService extends AbstractCrudService<Account> {
       this.logger.debug("deposit(" + account.getNumber() + ", " + amount + ")");
 
       account.addAmount(amount);
-      merge(account);
    }
 
    @Interceptors(AccountAudit.class)
    public boolean withdraw(Account account, BigDecimal amount) {
+
       if (account.substractAmount(amount)) {
-         merge(account);
          return true;
       }
+      fireEvent(account, amount);
+
       return false;
+   }
+
+   /**
+    * @param account
+    * @param amount
+    */
+   private void fireEvent(Account account, BigDecimal amount) {
+      this.monitoring.fire(WatchDog.with("account", account.getNumber()).and("clientid", account.getOwner().getClientId())
+            .and("balance", account.getBalance()).and("creditlimit", account.getCreditLimit()).and("substract", amount));
    }
 
    @SuppressWarnings("unchecked")

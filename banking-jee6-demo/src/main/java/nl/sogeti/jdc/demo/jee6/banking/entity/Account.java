@@ -35,7 +35,7 @@ public class Account extends AbstractEntity {
    @ManyToOne(optional = false)
    private Person owner;
    @Column(nullable = false, precision = 12, scale = 2)
-   private BigDecimal balans = BigDecimal.ZERO;
+   private BigDecimal balance = BigDecimal.ZERO;
    @Column(nullable = false, precision = 12, scale = 2)
    private BigDecimal creditLimit;
 
@@ -53,8 +53,8 @@ public class Account extends AbstractEntity {
       if (this.creditLimit != null && this.creditLimit.scale() != 2) {
          this.creditLimit = this.creditLimit.setScale(2, RoundingMode.HALF_UP);
       }
-      if (this.balans != null && this.balans.scale() != 2) {
-         this.balans = this.balans.setScale(2, RoundingMode.HALF_UP);
+      if (this.balance != null && this.balance.scale() != 2) {
+         this.balance = this.balance.setScale(2, RoundingMode.HALF_UP);
       }
    }
 
@@ -82,8 +82,8 @@ public class Account extends AbstractEntity {
       this.owner = owner;
    }
 
-   public BigDecimal getBalans() {
-      return this.balans;
+   public BigDecimal getBalance() {
+      return this.balance;
    }
 
    public void addAmount(BigDecimal amount) {
@@ -93,7 +93,7 @@ public class Account extends AbstractEntity {
       if (amount.compareTo(BigDecimal.ZERO) < 0) {
          throw new RuntimeException("Cannot add a negative amount");
       }
-      this.balans = this.balans.add(amount);
+      this.balance = this.balance.add(amount);
    }
 
    public boolean substractAmount(BigDecimal amount) {
@@ -103,11 +103,13 @@ public class Account extends AbstractEntity {
       if (amount.compareTo(BigDecimal.ZERO) < 0) {
          throw new RuntimeException("Cannot substract a negative amount");
       }
-      if (this.balans.subtract(amount).compareTo(getCreditLimit()) < 0) {
-         this.balans = this.balans.subtract(amount);
-         return true;
-      }
-      return false;
-   }
+      BigDecimal newBalance = this.balance.subtract(amount);
 
+      if (newBalance.compareTo(getCreditLimit().negate()) < 0) {
+
+         return false;
+      }
+      this.balance = newBalance;
+      return true;
+   }
 }

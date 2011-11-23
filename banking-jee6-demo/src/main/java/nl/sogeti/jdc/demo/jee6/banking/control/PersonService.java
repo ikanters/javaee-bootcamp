@@ -48,9 +48,14 @@ public class PersonService extends AbstractCrudService<Person> {
     * @param clientId
     * @return the found person (or null if not found).
     */
+   @SuppressWarnings("unchecked")
    public Person findByClientId(String clientId) {
       final Query namedQuery = createNamedQuery(Person.FIND_BY_CLIENTID);
       namedQuery.setParameter(Person.CLIENTID_PARAMNAME, clientId);
-      return (Person) namedQuery.getSingleResult();
+      List<Person> resultList = namedQuery.getResultList();
+      if (resultList.size() == 1) {
+         return resultList.get(0);
+      }
+      return null;
    }
 }

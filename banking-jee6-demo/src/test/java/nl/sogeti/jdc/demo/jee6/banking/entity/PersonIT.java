@@ -12,7 +12,7 @@ import org.junit.Test;
 /**
  * @author kanteriv
  */
-public class PersonIT extends AbstractEntityTest
+public class PersonIT extends AbstractEntityIT
 {
    @Test
    public void testPersist()

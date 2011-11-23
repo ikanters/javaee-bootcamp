@@ -86,9 +86,9 @@ public class BankingService implements BankingServiceLocal {
 
    @Override
    public boolean transfer(String accountNumber, String toAccountNumber, BigDecimal amount) {
-      final Account from = this.accountService.findAccount(accountNumber);
-      final Account to = this.accountService.findAccount(toAccountNumber);
-      return this.accountService.transfer(from, to, amount);
+      final Account attachedFrom = this.accountService.findAccount(accountNumber);
+      final Account attachedTo = this.accountService.findAccount(toAccountNumber);
+      return this.accountService.transfer(attachedFrom, attachedTo, amount);
    }
 
    @Override
@@ -98,12 +98,14 @@ public class BankingService implements BankingServiceLocal {
 
    @Override
    public void deposit(Account account, BigDecimal amount) {
-      this.accountService.deposit(account, amount);
+      final Account attachedAccount = this.accountService.findAccount(account.getNumber());
+      this.accountService.deposit(attachedAccount, amount);
    }
 
    @Override
    public boolean withdraw(Account account, BigDecimal amount) {
-      return this.accountService.withdraw(account, amount);
+      final Account attachedAccount = this.accountService.findAccount(account.getNumber());
+      return this.accountService.withdraw(attachedAccount, amount);
    }
 
    @Override

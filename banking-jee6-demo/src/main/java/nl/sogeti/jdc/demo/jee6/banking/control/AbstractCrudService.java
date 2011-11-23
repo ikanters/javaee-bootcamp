@@ -4,6 +4,8 @@
  */
 package nl.sogeti.jdc.demo.jee6.banking.control;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -15,6 +17,7 @@ import nl.sogeti.jdc.demo.jee6.banking.entity.AbstractEntity;
  * @param <ENTITY>
  *           The entity to use the CRUD on.
  */
+@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public abstract class AbstractCrudService<ENTITY extends AbstractEntity> {
    @PersistenceContext(unitName = "sample")
    EntityManager entityManager;

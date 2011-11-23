@@ -20,10 +20,10 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.slf4j.Logger;
-
 import nl.sogeti.jdc.demo.jee6.banking.boundary.BankingServiceLocal;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Account;
+
+import org.slf4j.Logger;
 
 /**
  * @author kanteriv
@@ -43,7 +43,7 @@ public class AccountRestService {
    public String getBalance(@PathParam("accountNumber") String accountNumber) {
       Account account = this.bankingService.findAccountByNumber(accountNumber);
       if (account != null) {
-         return account.getBalans().toPlainString();
+         return account.getBalance().toPlainString();
       }
       return "";
    }

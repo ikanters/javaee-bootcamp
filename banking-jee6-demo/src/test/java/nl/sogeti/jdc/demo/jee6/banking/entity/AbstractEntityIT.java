@@ -14,7 +14,7 @@ import org.junit.BeforeClass;
 /**
  * @author kanteriv
  */
-public abstract class AbstractEntityTest
+public abstract class AbstractEntityIT
 {
    private static EntityManagerFactory emf;
    private EntityManager entityManager;
@@ -23,7 +23,7 @@ public abstract class AbstractEntityTest
    private static String usedClientId = null;
    private static int nextClientId = 10000;
    
-   public AbstractEntityTest()
+   public AbstractEntityIT()
    {
       super();
    }

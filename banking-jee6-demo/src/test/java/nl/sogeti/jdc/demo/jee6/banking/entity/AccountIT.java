@@ -13,11 +13,9 @@ import org.junit.Test;
 /**
  * @author kanteriv
  */
-public class AccountIT extends AbstractEntityTest
-{
+public class AccountIT extends AbstractEntityIT {
    @Test
-   public void testPersist()
-   {
+   public void testPersist() {
       Person newPerson = createDefaultPerson(getNextUniqueClientId());
       Account account = createDefaultAccount(newPerson, "1111", new BigDecimal("500"));
       getTransaction().begin();
@@ -35,8 +33,7 @@ public class AccountIT extends AbstractEntityTest
       getTransaction().commit();
    }
 
-   private static Account createDefaultAccount(Person person, String accountNumber, BigDecimal creditLimit)
-   {
+   private static Account createDefaultAccount(Person person, String accountNumber, BigDecimal creditLimit) {
       Account account = new Account();
       account.setOwner(person);
       account.setNumber(accountNumber);

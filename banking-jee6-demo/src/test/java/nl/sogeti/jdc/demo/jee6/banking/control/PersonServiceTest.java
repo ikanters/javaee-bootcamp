@@ -16,67 +16,62 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
 
 /**
  * @author kanteriv
  */
-public class PersonServiceTest
-{
+public class PersonServiceTest {
    private PersonService personService;
-   
+
    /**
     * @throws java.lang.Exception
     */
    @Before
-   public void setUp() throws Exception
-   {
+   public void setUp() throws Exception {
       this.personService = new PersonService();
       this.personService.entityManager = mock(EntityManager.class);
    }
-   
+
    /**
     * Test method for {@link nl.sogeti.jdc.demo.jee6.banking.control.PersonService#findAll()}.
     */
    @Test
-   public void testFindAll()
-   {
+   public void testFindAll() {
       Query mockQuery = mock(Query.class);
       when(this.personService.entityManager.createNamedQuery(anyString())).thenReturn(mockQuery);
       when(mockQuery.getResultList()).thenReturn(new ArrayList<Person>());
       List<Person> all = this.personService.findAll();
-      
+
       assertTrue(all.isEmpty());
    }
-   
+
    /**
     * Test method for {@link nl.sogeti.jdc.demo.jee6.banking.control.PersonService#findAll()}.
     */
    @Test
-   public void testFindByClientId()
-   {
+   public void testFindByClientId() {
       Query mockQuery = mock(Query.class);
       when(this.personService.entityManager.createNamedQuery(anyString())).thenReturn(mockQuery);
-      when(mockQuery.getResultList()).thenReturn(null);
+      when(mockQuery.getResultList()).thenReturn(new ArrayList<Person>());
       Person person = this.personService.findByClientId("12345");
-      
+
       assertNull(person);
    }
-   
+
    /**
     * Test method for {@link nl.sogeti.jdc.demo.jee6.banking.control.PersonService#count()}.
     */
    @Test
-   public void testCountPersons()
-   {
+   public void testCountPersons() {
       Query mockQuery = mock(Query.class);
       when(this.personService.entityManager.createNamedQuery(anyString())).thenReturn(mockQuery);
       when(mockQuery.getSingleResult()).thenReturn(Integer.valueOf(99));
       int countPersons = this.personService.count();
-      
+
       assertEquals(99, countPersons);
    }
 }
