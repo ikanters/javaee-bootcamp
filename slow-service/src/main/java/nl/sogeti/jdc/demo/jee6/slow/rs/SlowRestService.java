@@ -22,10 +22,11 @@ import org.slf4j.Logger;
 @Path("slow")
 public class SlowRestService {
 
+   private static final int MAX_WAIT_TIME_IN_MILLIS = 1500;
+   private static Random random = new Random(System.currentTimeMillis());
+
    @Inject
    Logger logger;
-
-   private static Random random = new Random(System.currentTimeMillis());
 
    @GET
    @Produces(MediaType.TEXT_PLAIN)
@@ -33,21 +34,20 @@ public class SlowRestService {
 
       long start = System.currentTimeMillis();
       try {
+
          int millisToWait = time <= 0 ? getRandomTime() : time;
          this.logger.info("Sleeping for " + millisToWait + " millis.");
          Thread.sleep(millisToWait);
+
       } catch (InterruptedException e) {
-         e.printStackTrace();
+         this.logger.info("The sleep is interrupted... " + e);
       }
       long end = System.currentTimeMillis();
 
       return "" + (end - start);
    }
 
-   /**
-    * @return
-    */
    private int getRandomTime() {
-      return random.nextInt(1500);
+      return random.nextInt(MAX_WAIT_TIME_IN_MILLIS);
    }
 }
