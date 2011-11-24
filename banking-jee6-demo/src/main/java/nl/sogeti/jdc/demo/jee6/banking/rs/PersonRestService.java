@@ -52,7 +52,7 @@ public class PersonRestService {
       try {
          insertedPerson = this.bankingService.createPerson(person);
       } catch (TransactionRollbackException e) {
-         logger.error("person not created because:" + e.getMessage(), e);
+         this.logger.error("person not created because:" + e.getMessage(), e);
          return null;
       }
 
@@ -64,7 +64,12 @@ public class PersonRestService {
    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
    public Response updatePerson(@PathParam("clientId") String clientId, Person person) {
       if (clientId.equals(person.getClientId())) {
-         this.bankingService.updatePerson(person);
+         try {
+            this.bankingService.updatePerson(person);
+         } catch (TransactionRollbackException e) {
+            this.logger.error("person not updated because:" + e.getMessage(), e);
+            return Response.notModified(clientId).build();
+         }
          return Response.ok().build();
       }
       return Response.notModified(clientId).build();

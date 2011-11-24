@@ -37,14 +37,6 @@ public class PersonService extends AbstractCrudService<Person> {
    }
 
    /**
-    * @see nl.sogeti.jdc.demo.jee6.banking.control.AbstractCrudService#merge(nl.sogeti.jdc.demo.jee6.banking.entity.AbstractEntity)
-    */
-   @Override
-   public Person merge(Person entity) {
-      return super.merge(entity);
-   }
-
-   /**
     * @param clientId
     * @return the found person (or null if not found).
     */

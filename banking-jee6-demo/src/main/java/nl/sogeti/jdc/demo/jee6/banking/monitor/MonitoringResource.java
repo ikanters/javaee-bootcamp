@@ -23,7 +23,7 @@ public class MonitoringResource {
       Map<String, String> map = watchDog.asMap();
       if (map != null) {
          for (Map.Entry<String, String> element : map.entrySet()) {
-            logger.info(element.getKey() + ": " + element.getValue());
+            this.logger.info(element.getKey() + ": " + element.getValue());
          }
       }
    }

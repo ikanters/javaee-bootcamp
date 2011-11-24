@@ -3,52 +3,21 @@
  */
 package nl.sogeti.jdc.demo.jee6.banking.entity;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import nl.sogeti.jdc.demo.jee6.banking.test.AbstractIT;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
+
 
 /**
  * @author kanteriv
  */
-public abstract class AbstractEntityIT
+public abstract class AbstractEntityIT extends AbstractIT
 {
-   private static EntityManagerFactory emf;
-   private EntityManager entityManager;
-   private EntityTransaction transaction;
-   
    private static String usedClientId = null;
    private static int nextClientId = 10000;
    
    public AbstractEntityIT()
    {
       super();
-   }
-   
-   public EntityManager getEntityManager()
-   {
-      return this.entityManager;
-   }
-   
-   public EntityTransaction getTransaction()
-   {
-      return this.transaction;
-   }
-   
-   @BeforeClass
-   public static void oneTimeSetUp() throws Exception
-   {
-      emf = Persistence.createEntityManagerFactory("testPU");
-   }
-   
-   @Before
-   public void setUp() throws Exception
-   {
-      this.entityManager = emf.createEntityManager();
-      this.transaction = this.entityManager.getTransaction();
    }
    
    protected Person insertUniquePerson()

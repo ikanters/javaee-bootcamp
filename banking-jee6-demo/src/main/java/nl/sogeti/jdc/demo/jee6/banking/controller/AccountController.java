@@ -13,12 +13,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
-import org.slf4j.Logger;
-
 import nl.sogeti.jdc.demo.jee6.banking.boundary.BankingServiceLocal;
+import nl.sogeti.jdc.demo.jee6.banking.constants.Constants;
 import nl.sogeti.jdc.demo.jee6.banking.controller.util.ControllerUtil;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Account;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
+import nl.sogeti.jdc.demo.jee6.banking.exception.TransactionRollbackException;
+
+import org.slf4j.Logger;
 
 /**
  * @author kanteriv
@@ -66,21 +68,35 @@ public class AccountController {
     * Saves an account to the database. If it is a new account, it will be inserted, otherwise an update will be done.
     */
    public void save() {
-      // try
-      // {
-      this.logger.debug("save :: " + this.selected);
-      if (this.selected.getId() == null) {
-         this.selected = this.bankingService.createAccount(this.selected);
-      } else {
-         this.selected = this.bankingService.updateAccount(this.selected);
+      try {
+         this.logger.debug("save :: " + this.selected);
+         if (this.selected.getId() == null) {
+            this.selected = this.bankingService.createAccount(this.selected);
+         } else {
+            this.selected = this.bankingService.updateAccount(this.selected);
+         }
+         findAllAccounts();
+         setSelected(getAccountFromList(getSelected().getNumber()));
+
+         this.controllerUtil.addCallBackParam(Constants.CALLBACK_PARAM_SAVED_FAILED, Boolean.FALSE);
+      } catch (TransactionRollbackException e) {
+
+         this.controllerUtil.addMessage(e.getMessage());
+         this.controllerUtil.addCallBackParam(Constants.CALLBACK_PARAM_SAVED_FAILED, Boolean.TRUE);
       }
-      findAllAccounts();
-      // }
-      // catch (PersistException e)
-      // {
-      // this.controllerUtil.addMessage("not saved!!! beacause: " + e.getMessage());
-      // this.controllerUtil.addCallBackParam(Constants.CALLBACK_PARAM_SAVED_FAILED, Boolean.TRUE);
-      // }
+   }
+
+   /**
+    * @param number
+    * @return
+    */
+   private Account getAccountFromList(String number) {
+      for (Account account : getAllAccounts()) {
+         if (account.getNumber().equals(number)) {
+            return account;
+         }
+      }
+      return null;
    }
 
    /**

@@ -81,8 +81,9 @@ public class AccountAudit {
    }
 
    /**
-    * Pretty simple check if the parameters are valid to 'log'. We expect: - 3 parameters - first 2 are String - last is BigDecimal. The parameters are not
-    * expected to be null... (all mandatory).
+    * Pretty simple check if the parameters are valid to 'log'. We expect: - 2 of 3 parameters last is BigDecimal, the rest are Account
+    * 
+    * The parameters are not expected to be null... (all mandatory).
     * 
     * @param parameters
     *           the parameters to validate.
@@ -92,23 +93,21 @@ public class AccountAudit {
       if (parameters == null) {
          return false;
       }
+      // 2 or 3 parameters
       if (parameters.length != 2 && parameters.length != 3) {
          return false;
       }
 
-      int i = 0;
-      for (Object parameter : parameters) {
-         if (parameter == null) {
-            return false;
-         }
-         if (i < (parameters.length - 1) && !(parameter instanceof Account)) {
-            return false;
-         }
+      // The last is Bigdecimal;
+      if (!(parameters[parameters.length - 1] instanceof BigDecimal)) {
+         return false;
+      }
 
-         if (i == (parameters.length - 1) && !(parameter instanceof BigDecimal)) {
+      // all except the last is Account
+      for (int i = 0; i < parameters.length - 1; i++) {
+         if (!(parameters[i] instanceof Account)) {
             return false;
          }
-         i++;
       }
 
       return true;

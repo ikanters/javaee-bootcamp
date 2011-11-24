@@ -37,7 +37,7 @@ public class Account extends AbstractEntity {
    @Column(nullable = false, precision = 12, scale = 2)
    private BigDecimal balance = BigDecimal.ZERO;
    @Column(nullable = false, precision = 12, scale = 2)
-   private BigDecimal creditLimit;
+   private BigDecimal creditLimit = BigDecimal.ZERO;
 
    protected Account() {
       super();

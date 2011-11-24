@@ -21,6 +21,7 @@ import nl.sogeti.jdc.demo.jee6.banking.boundary.BankingServiceLocal;
 import nl.sogeti.jdc.demo.jee6.banking.constants.Constants;
 import nl.sogeti.jdc.demo.jee6.banking.controller.util.ControllerUtil;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
+import nl.sogeti.jdc.demo.jee6.banking.exception.ApplicationException;
 import nl.sogeti.jdc.demo.jee6.banking.exception.TransactionRollbackException;
 import nl.sogeti.jdc.demo.jee6.banking.rs.client.SlowRestClient;
 
@@ -72,16 +73,17 @@ public class PersonController implements Serializable {
             setTimespend("" + result.get(500, TimeUnit.MILLISECONDS));
          } catch (TimeoutException e) {
             setTimespend("> 500");
-
-         } catch (InterruptedException | ExecutionException e) {
-            // TODO Auto-generated catch block
-            throw new RuntimeException("TODO (kanteriv) handle this Auto-generated exception", e);
-
+         } catch (InterruptedException e) {
+            throw new ApplicationException("Unexpected interrupt", e);
+         } catch (ExecutionException e) {
+            throw new ApplicationException("Unexpected execution failure", e);
          }
          selectAll();
          setSelected(getPersonFromList(getSelected().getClientId()));
          this.controllerUtil.addCallBackParam(Constants.CALLBACK_PARAM_SAVED_FAILED, Boolean.FALSE);
+
       } catch (TransactionRollbackException e) {
+
          this.controllerUtil.addMessage(e.getMessage());
          this.controllerUtil.addCallBackParam(Constants.CALLBACK_PARAM_SAVED_FAILED, Boolean.TRUE);
       }

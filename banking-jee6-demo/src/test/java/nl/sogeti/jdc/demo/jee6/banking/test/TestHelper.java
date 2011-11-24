@@ -17,7 +17,12 @@ public class TestHelper {
    }
 
    public static Account createAccount(String number, String owner, String firstName, String lastName) {
-      Account account = new Account(new Person(owner, firstName, lastName));
+      Person person = new Person(owner, firstName, lastName);
+      return createAccount(number, person);
+   }
+
+   public static Account createAccount(String number, Person person) {
+      Account account = new Account(person);
       account.setNumber(number);
       return account;
    }

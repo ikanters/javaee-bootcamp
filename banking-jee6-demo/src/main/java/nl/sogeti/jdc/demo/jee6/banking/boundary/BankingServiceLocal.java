@@ -22,7 +22,7 @@ public interface BankingServiceLocal extends BankingServiceRemote {
 
    Person createPerson(Person person) throws TransactionRollbackException;
 
-   Person updatePerson(Person person);
+   Person updatePerson(Person person) throws TransactionRollbackException;
 
    Account findAccountByNumber(String accountNumber);
 
@@ -30,9 +30,9 @@ public interface BankingServiceLocal extends BankingServiceRemote {
 
    List<Account> findAccountsFor(Person owner);
 
-   Account createAccount(Account selected);
+   Account createAccount(Account selected) throws TransactionRollbackException;
 
-   Account updateAccount(Account selected);
+   Account updateAccount(Account selected) throws TransactionRollbackException;
 
    void deposit(Account account, BigDecimal amount);
 

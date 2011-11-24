@@ -12,14 +12,13 @@ import java.util.Map;
  */
 public class WatchDog {
 
-   private final Map<String, String> parameters;
+   private final Map<String, String> parameters = new HashMap<String, String>();
 
    /**
     * @param name
     * @param value
     */
    public WatchDog(String name, Object value) {
-      this.parameters = new HashMap<>();
       this.parameters.put(name, String.valueOf(value));
    }
 

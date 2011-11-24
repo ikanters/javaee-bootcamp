@@ -1,7 +1,7 @@
 /**
  * 
  */
-package nl.sogeti.jdc.demo.jee6.banking.control;
+package nl.sogeti.jdc.demo.jee6.banking.boundary;
 
 import java.math.BigDecimal;
 
@@ -12,6 +12,8 @@ import javax.ejb.Startup;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
+import nl.sogeti.jdc.demo.jee6.banking.control.AccountService;
+import nl.sogeti.jdc.demo.jee6.banking.control.PersonService;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Account;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
 

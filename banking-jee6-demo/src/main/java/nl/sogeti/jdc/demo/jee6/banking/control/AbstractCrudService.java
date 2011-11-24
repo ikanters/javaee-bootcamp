@@ -19,7 +19,7 @@ import nl.sogeti.jdc.demo.jee6.banking.entity.AbstractEntity;
  */
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 public abstract class AbstractCrudService<ENTITY extends AbstractEntity> {
-   @PersistenceContext(unitName = "sample")
+   @PersistenceContext
    EntityManager entityManager;
 
    protected abstract Class<ENTITY> getEntityClass();
