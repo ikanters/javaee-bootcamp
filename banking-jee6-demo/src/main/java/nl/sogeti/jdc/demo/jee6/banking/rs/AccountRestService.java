@@ -52,8 +52,9 @@ public class AccountRestService {
    @Path("{accountNumber}")
    public Response transfer(@PathParam("accountNumber") String accountNumber, @QueryParam("toAccountNumber") String toAccountNumber,
          @QueryParam("amount") BigDecimal amount) {
-      if (this.bankingService.transfer(accountNumber, toAccountNumber, amount))
+      if (this.bankingService.transfer(accountNumber, toAccountNumber, amount)) {
          return ok().build();
+      }
 
       return Response.notModified(accountNumber).build();
    }

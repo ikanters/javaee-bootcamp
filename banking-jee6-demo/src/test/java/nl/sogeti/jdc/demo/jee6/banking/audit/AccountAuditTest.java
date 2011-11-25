@@ -100,11 +100,12 @@ public class AccountAuditTest {
       Method method = this.getClass().getDeclaredMethod("testAccountLogging");
 
       Object[] parameters = new Object[] { DUMMY_ACCOUNT1, DUMMY_ACCOUNT2, BigDecimal.TEN };
-
+      testInvocation(method, parameters, null);
+      parameters = new Object[] { DUMMY_ACCOUNT1, BigDecimal.TEN };
       testInvocation(method, parameters, null);
 
       // this one is correct so a persist on the accountLogServiceMock is expected.(both accounts)
-      verify(this.accountLogServiceMock, times(2)).persist((AccountLog) anyObject());
+      verify(this.accountLogServiceMock, times(3)).persist((AccountLog) anyObject());
    }
 
    private void testInvocation(Method method, Object[] parameters, Object result) throws Exception {

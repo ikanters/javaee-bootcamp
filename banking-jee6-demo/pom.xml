@@ -222,7 +222,7 @@
          <version>${derby.version}</version>
          <scope>test</scope>
       </dependency>
-      <dependency>
+       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
          <version>${junit.version}</version>
@@ -240,11 +240,12 @@
          <scope>provided</scope>
       </dependency>
       <dependency>
-         <groupId>javax.jms</groupId>
-         <artifactId>jms</artifactId>
-         <version>${jms.version}</version>
+         <groupId>org.apache.geronimo.specs</groupId>
+         <artifactId>geronimo-jms_1.1_spec</artifactId>
+         <version>1.1.1</version>
          <scope>provided</scope>
       </dependency>
+
       <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-api</artifactId>
@@ -253,5 +254,15 @@
       </dependency>
 
    </dependencies>
-
+<!--
+   <reporting>
+      <plugins>
+         <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>cobertura-maven-plugin</artifactId>
+            <version>2.5.1</version>
+         </plugin>
+      </plugins>
+   </reporting>
+-->
 </project>

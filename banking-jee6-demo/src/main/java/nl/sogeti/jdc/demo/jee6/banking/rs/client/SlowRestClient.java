@@ -13,7 +13,7 @@ import java.util.concurrent.Future;
 
 import javax.ejb.AsyncResult;
 import javax.ejb.Asynchronous;
-import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import nl.sogeti.jdc.demo.jee6.banking.exception.ApplicationException;
@@ -24,8 +24,15 @@ import org.slf4j.Logger;
  * @author kanteriv
  * 
  */
-@Stateful
+@Stateless
 public class SlowRestClient {
+
+   static String protocol = "http";
+   static String host = "localhost";
+   static int port = 8080;
+   static final String contextRoot = "/slow-service";
+   static final String applicationPath = "resources";
+   static final String restPath = "slow";
 
    @Inject
    Logger logger;
@@ -42,8 +49,9 @@ public class SlowRestClient {
 
       int result = 0;
       try {
+         String urlString = protocol + "://" + host + ":" + port + contextRoot + "/" + applicationPath + "/" + restPath;
 
-         URL url = new URL("http://localhost:8080/slow-service/resources/slow?time=" + millis);
+         URL url = new URL(urlString + "?time=" + millis);
          HttpURLConnection conn = (HttpURLConnection) url.openConnection();
          conn.setRequestMethod("GET");
 
