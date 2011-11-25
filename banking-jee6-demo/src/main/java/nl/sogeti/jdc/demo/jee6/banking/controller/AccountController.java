@@ -104,10 +104,15 @@ public class AccountController {
     * Deposit an amount to the account.
     */
    public void transfer() {
+
       if (this.depositMode) {
          this.bankingService.deposit(this.selected, this.transferAmount);
       } else {
-         this.bankingService.withdraw(this.selected, this.transferAmount);
+         if (!this.bankingService.withdraw(this.selected, this.transferAmount)) {
+
+            this.controllerUtil.addMessage("Unable to withdraw " + this.transferAmount + " from this account.");
+            this.controllerUtil.addCallBackParam(Constants.CALLBACK_PARAM_SAVED_FAILED, Boolean.TRUE);
+         }
       }
       findAllAccounts();
       setSelected(getAccountFromList(getSelected().getNumber()));

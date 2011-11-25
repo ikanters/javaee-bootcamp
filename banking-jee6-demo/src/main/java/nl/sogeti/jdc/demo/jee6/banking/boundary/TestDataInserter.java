@@ -26,6 +26,8 @@ import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class TestDataInserter {
 
+   static final int NUMBER_OF_CLIENTS = 20;
+   static final int NUMBER_OF_ACCOUNTS_PER_CLIENTS = 3;
    @EJB
    PersonService personService;
    @EJB
@@ -33,14 +35,13 @@ public class TestDataInserter {
 
    @PostConstruct
    public void insertTestData() {
-      for (int i = 0; i < 5; i++) {
+      for (int i = 0; i < NUMBER_OF_CLIENTS; i++) {
 
-         String clientId = "" + (90000 + i);
-
+         String clientId = "123." + (100 + i);
          Person person = createPersonIfNotExists(clientId, i);
 
-         for (int j = 0; j < 3; j++) {
-            String accountNumber = "800.00" + i + ".00" + j;
+         for (int j = 0; j < NUMBER_OF_ACCOUNTS_PER_CLIENTS; j++) {
+            String accountNumber = "800.000" + i + "." + (100 + j);
             createAccountIfNotExists(person, clientId, accountNumber);
          }
       }
@@ -73,7 +74,7 @@ public class TestDataInserter {
       Person person = this.personService.findByClientId(clientId);
       if (person == null) {
 
-         person = new Person(clientId, "Testperson 0" + (i + 1), "__" + (char) ('A' + i));
+         person = new Person(clientId, "Testperson " + ("" + (101 + i)).substring(1), "__" + (char) ('A' + i));
          this.personService.persist(person);
       }
       return person;

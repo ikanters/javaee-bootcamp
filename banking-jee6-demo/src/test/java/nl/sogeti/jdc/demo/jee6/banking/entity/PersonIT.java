@@ -38,7 +38,9 @@ public class PersonIT extends AbstractEntityIT {
 
    @Test(expected = PersistenceException.class)
    public void testPersistDuplKey() {
+      insertUniquePerson();
       Person person = createPerson(getUsedClientId(), "Anders", "anders");
+      getEntityManager().flush();
       getEntityManager().persist(person);
       getEntityManager().flush();
    }

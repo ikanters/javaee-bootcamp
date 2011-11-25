@@ -3,13 +3,14 @@
  */
 package nl.sogeti.jdc.demo.jee6.banking.boundary;
 
+import static nl.sogeti.jdc.demo.jee6.banking.boundary.TestDataInserter.NUMBER_OF_ACCOUNTS_PER_CLIENTS;
+import static nl.sogeti.jdc.demo.jee6.banking.boundary.TestDataInserter.NUMBER_OF_CLIENTS;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import nl.sogeti.jdc.demo.jee6.banking.boundary.TestDataInserter;
 import nl.sogeti.jdc.demo.jee6.banking.control.AccountService;
 import nl.sogeti.jdc.demo.jee6.banking.control.PersonService;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Account;
@@ -45,9 +46,9 @@ public class TestDataInserterTest {
       when(this.testDataInserter.accountService.persist((Account) anyObject())).thenReturn(null);
 
       this.testDataInserter.insertTestData();
-      verify(this.testDataInserter.personService, times(5)).findByClientId(anyString());
-      verify(this.testDataInserter.personService, times(5)).persist((Person) anyObject());
-      verify(this.testDataInserter.accountService, times(5 * 3)).findAccount(anyString());
-      verify(this.testDataInserter.accountService, times(5 * 3)).persist((Account) anyObject());
+      verify(this.testDataInserter.personService, times(NUMBER_OF_CLIENTS)).findByClientId(anyString());
+      verify(this.testDataInserter.personService, times(NUMBER_OF_CLIENTS)).persist((Person) anyObject());
+      verify(this.testDataInserter.accountService, times(NUMBER_OF_CLIENTS * NUMBER_OF_ACCOUNTS_PER_CLIENTS)).findAccount(anyString());
+      verify(this.testDataInserter.accountService, times(NUMBER_OF_CLIENTS * NUMBER_OF_ACCOUNTS_PER_CLIENTS)).persist((Account) anyObject());
    }
 }
