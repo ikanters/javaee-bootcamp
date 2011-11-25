@@ -8,11 +8,14 @@ import java.util.Map;
  * @author kanteriv
  */
 public class TransactionRollbackException extends Exception {
+
+   static final String DUPLICATE_KEY_DETECTED = "Duplicate key detected...";
+
    private static final long serialVersionUID = -5553562094583710913L;
 
    private static final Map<Class<? extends Throwable>, String> MESSAGES = new HashMap<Class<? extends Throwable>, String>();
    static {
-      MESSAGES.put(SQLIntegrityConstraintViolationException.class, "Duplicate key detected...");
+      MESSAGES.put(SQLIntegrityConstraintViolationException.class, DUPLICATE_KEY_DETECTED);
    }
 
    private String type;
