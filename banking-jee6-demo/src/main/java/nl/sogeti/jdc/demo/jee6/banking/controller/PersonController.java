@@ -68,6 +68,8 @@ public class PersonController implements Serializable {
          } else {
             this.bankingService.updatePerson(getSelected());
          }
+
+         // Call a slow (asynchronized) method.
          Future<Integer> result = this.slowRestClient.callSlowMethod(0);
          try {
             setTimespend("" + result.get(500, TimeUnit.MILLISECONDS));
@@ -78,6 +80,7 @@ public class PersonController implements Serializable {
          } catch (ExecutionException e) {
             throw new ApplicationException("Unexpected execution failure", e);
          }
+
          selectAll();
          setSelected(getPersonFromList(getSelected().getClientId()));
          this.controllerUtil.addCallBackParam(Constants.CALLBACK_PARAM_SAVED_FAILED, Boolean.FALSE);

@@ -1,10 +1,19 @@
 package nl.sogeti.jdc.demo.jee6.banking.exception;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author kanteriv
  */
 public class TransactionRollbackException extends Exception {
    private static final long serialVersionUID = -5553562094583710913L;
+
+   private static final Map<Class<? extends Throwable>, String> MESSAGES = new HashMap<Class<? extends Throwable>, String>();
+   static {
+      MESSAGES.put(SQLIntegrityConstraintViolationException.class, "Duplicate key detected...");
+   }
 
    private String type;
    private String message;
@@ -12,13 +21,20 @@ public class TransactionRollbackException extends Exception {
    public TransactionRollbackException(Throwable t) {
       Throwable current = t;
 
-      do {
-         if (current.getCause() == null) {
-            this.type = current.getClass().getSimpleName();
+      while (current != null && this.message == null) {
+
+         Class<? extends Throwable> currentClass = current.getClass();
+
+         if (MESSAGES.containsKey(currentClass)) {
+            this.type = currentClass.getSimpleName();
+            this.message = MESSAGES.get(currentClass);
+
+         } else if (current.getCause() == null) {
+            this.type = currentClass.getSimpleName();
             this.message = current.getMessage();
          }
          current = current.getCause();
-      } while (current != null);
+      }
    }
 
    public String getType() {
@@ -29,4 +45,5 @@ public class TransactionRollbackException extends Exception {
    public String getMessage() {
       return this.message;
    }
+
 }

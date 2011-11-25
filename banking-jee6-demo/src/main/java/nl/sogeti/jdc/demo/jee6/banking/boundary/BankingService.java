@@ -76,7 +76,8 @@ public class BankingService implements BankingServiceLocal {
    public Person updatePerson(Person person) throws TransactionRollbackException {
       // Set the id by searching the correct entity based on the logical key.
       try {
-         person.setId(this.personService.findByClientId(person.getClientId()).getId());
+         String clientId = person.getClientId();
+         person.setId(this.personService.findByClientId(clientId).getId());
          Person saved = this.personService.merge(person);
          this.personService.flush();
          return saved;

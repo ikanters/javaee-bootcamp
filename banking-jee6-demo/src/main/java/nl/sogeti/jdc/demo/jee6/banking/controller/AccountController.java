@@ -45,6 +45,7 @@ public class AccountController {
    private List<Account> allAccounts;
    private Account selected;
    private BigDecimal transferAmount = BigDecimal.ZERO.setScale(2);
+   private boolean depositMode = true;
 
    /**
     * Based on the userData that is stored in the session the accounts for the selected person is retrieved (on construct).
@@ -102,16 +103,15 @@ public class AccountController {
    /**
     * Deposit an amount to the account.
     */
-   public void deposit() {
-      this.bankingService.deposit(this.selected, this.transferAmount);
-      setTransferAmount(BigDecimal.ZERO.setScale(2));
-   }
+   public void transfer() {
+      if (this.depositMode) {
+         this.bankingService.deposit(this.selected, this.transferAmount);
+      } else {
+         this.bankingService.withdraw(this.selected, this.transferAmount);
+      }
+      findAllAccounts();
+      setSelected(getAccountFromList(getSelected().getNumber()));
 
-   /**
-    * Withdraw an amount from the account.
-    */
-   public void withdraw() {
-      this.bankingService.withdraw(this.selected, this.transferAmount);
       setTransferAmount(BigDecimal.ZERO.setScale(2));
    }
 
@@ -123,6 +123,22 @@ public class AccountController {
       Account account = new Account(getOwner());
       account.setOwner(getOwner());
       setSelected(account);
+   }
+
+   public String getModeAsString() {
+      return this.depositMode ? "Deposit" : "Withdraw";
+   }
+
+   public void depositMode() {
+      this.depositMode = true;
+   }
+
+   public void withdrawMode() {
+      this.depositMode = false;
+   }
+
+   public boolean getDepositMode() {
+      return this.depositMode;
    }
 
    public BigDecimal getTransferAmount() {
@@ -152,4 +168,5 @@ public class AccountController {
    public Person getOwner() {
       return this.userData.getSelectedPerson();
    }
+
 }

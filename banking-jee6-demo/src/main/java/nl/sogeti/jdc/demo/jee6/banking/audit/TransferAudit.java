@@ -38,12 +38,12 @@ public class TransferAudit {
    @Inject
    Logger logger;
    @EJB
-   TransferService auditService;
+   TransferService transferService;
 
    @Resource(name = "jms/jee6-demo/ConnectionFactory")
    private ConnectionFactory connectionFactory;
-   @Resource(name = "jms/jee6-demo/Queue")
-   private Destination queue;
+   @Resource(name = "jms/jee6-demo/Destination")
+   private Destination destination;
 
    /**
     * Logs a transfer to the database (and logfile).
@@ -70,9 +70,12 @@ public class TransferAudit {
       }
       Object result = ic.proceed();
 
+      // After successful proceed, save the transfer entity to the database.
       if (transfer != null) {
-         this.auditService.persist(transfer);
-         sendOverQueue(transfer);
+         this.transferService.persist(transfer);
+
+         // And also send this log over JMS.
+         sendOverJMS(transfer);
       }
       return result;
    }
@@ -80,20 +83,22 @@ public class TransferAudit {
    /**
     * @param transfer
     */
-   private void sendOverQueue(Transfer transfer) {
+   private void sendOverJMS(Transfer transfer) {
 
       if (this.connectionFactory != null) {
+
          Connection connection = null;
          Session session = null;
          MessageProducer producer = null;
          try {
             connection = this.connectionFactory.createConnection();
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            producer = session.createProducer(this.queue);
+            producer = session.createProducer(this.destination);
 
             final TextMessage message = session.createTextMessage(transfer.toString());
             // put the message on the queue
             producer.send(message);
+
          } catch (JMSException e) {
             this.logger.error("Unable to put the transfer on the queue....", e);
          } finally {
@@ -146,6 +151,7 @@ public class TransferAudit {
             // No close method om this object. So we dont close is... Just log that a close is called on a not closable object...
             this.logger.warn("close is called on an object of class " + object.getClass().getName() + ", but no close method is found.");
          }
+
          if (method != null) {
             try {
                method.invoke(object);

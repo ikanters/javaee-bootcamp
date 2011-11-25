@@ -20,6 +20,7 @@ public class MonitoringResource {
    Logger logger;
 
    public void onNewWatchdog(@Observes WatchDog watchDog) {
+
       Map<String, String> map = watchDog.asMap();
       if (map != null) {
          for (Map.Entry<String, String> element : map.entrySet()) {

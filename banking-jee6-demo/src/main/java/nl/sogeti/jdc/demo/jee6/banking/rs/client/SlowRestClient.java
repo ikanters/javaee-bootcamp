@@ -43,7 +43,7 @@ public class SlowRestClient {
       int result = 0;
       try {
 
-         URL url = new URL("http://l080074:8080/slow-service/resources/slow?time=" + millis);
+         URL url = new URL("http://localhost:8080/slow-service/resources/slow?time=" + millis);
          HttpURLConnection conn = (HttpURLConnection) url.openConnection();
          conn.setRequestMethod("GET");
 
@@ -55,6 +55,7 @@ public class SlowRestClient {
 
          String output;
          this.logger.info("Output from Server: ");
+
          while ((output = br.readLine()) != null) {
             this.logger.info(output);
             result = Integer.parseInt(output);
@@ -63,13 +64,9 @@ public class SlowRestClient {
          conn.disconnect();
 
       } catch (MalformedURLException e) {
-
-         e.printStackTrace();
-
+         throw new RuntimeException("Url is wrong", e);
       } catch (IOException e) {
-
-         e.printStackTrace();
-
+         throw new RuntimeException("Cannot connect???!!!", e);
       }
       return new AsyncResult<Integer>(result);
    }

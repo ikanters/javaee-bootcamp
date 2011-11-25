@@ -16,8 +16,9 @@ import org.slf4j.Logger;
  * @author kanteriv
  * 
  */
-@MessageDriven(mappedName = "jms/jee6-demo/Queue")
+@MessageDriven(mappedName = "jms/jee6-demo/Destination")
 public class TransferMDB implements MessageListener {
+
    @Inject
    Logger logger;
 

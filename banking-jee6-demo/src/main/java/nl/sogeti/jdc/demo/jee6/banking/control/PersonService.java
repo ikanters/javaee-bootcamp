@@ -7,8 +7,6 @@ package nl.sogeti.jdc.demo.jee6.banking.control;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.Query;
 
 import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
@@ -18,7 +16,6 @@ import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
  */
 @ControlService
 @Stateless
-@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class PersonService extends AbstractCrudService<Person> {
 
    @Override

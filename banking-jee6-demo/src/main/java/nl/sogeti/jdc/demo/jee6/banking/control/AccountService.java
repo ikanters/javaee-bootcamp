@@ -8,8 +8,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
@@ -28,7 +26,6 @@ import org.slf4j.Logger;
  */
 @ControlService
 @Stateless
-@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class AccountService extends AbstractCrudService<Account> {
    @Inject
    Logger logger;
@@ -67,6 +64,7 @@ public class AccountService extends AbstractCrudService<Account> {
       if (account.substractAmount(amount)) {
          return true;
       }
+      // Substract failed... Exceeding the credit limit...
       fireEvent(account, amount);
 
       return false;
@@ -77,8 +75,13 @@ public class AccountService extends AbstractCrudService<Account> {
     * @param amount
     */
    private void fireEvent(Account account, BigDecimal amount) {
-      this.monitoring.fire(WatchDog.with("account", account.getNumber()).and("clientid", account.getOwner().getClientId())
-            .and("balance", account.getBalance()).and("creditlimit", account.getCreditLimit()).and("substract", amount));
+      WatchDog watchdog = new WatchDog("account", account.getNumber());
+      watchdog.and("clientid", account.getOwner().getClientId());
+      watchdog.and("balance", account.getBalance());
+      watchdog.and("creditlimit", account.getCreditLimit());
+      watchdog.and("substract", amount);
+
+      this.monitoring.fire(watchdog);
    }
 
    @SuppressWarnings("unchecked")

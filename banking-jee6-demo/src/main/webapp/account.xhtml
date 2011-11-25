@@ -39,7 +39,9 @@
                oncomplete="dialogWidget.show()" />
             <p:commandButton value="Edit" image="ui-icon ui-icon-pencil" update=":editForm:panelGrid" oncomplete="dialogWidget.show()"
                rendered="#{not empty accountController.selected}" />
-            <p:commandButton value="Transfer" update=":transferForm:transformPanelGrid" oncomplete="dialogTransferWidget.show()"
+            <p:commandButton value="Deposit" update=":transferForm:transferPanelGrid" action="#{accountController.depositMode}" oncomplete="dialogTransferWidget.show()"
+               rendered="#{not empty accountController.selected}" />
+            <p:commandButton value="Withdraw" update=":transferForm:transferPanelGrid" action="#{accountController.withdrawMode}" oncomplete="dialogTransferWidget.show()"
                rendered="#{not empty accountController.selected}" />
          </p:panel>
       </p:panel>
@@ -69,20 +71,18 @@
          </h:panelGrid>
       </p:dialog>
    </h:form>
-   <h:form id="transformForm">
+   <h:form id="transferForm">
       <p:dialog header="Transfer" modal="true" widgetVar="dialogTransferWidget" resizable="false" width="600">
 
          <p:focus id="focus" />
 
-         <h:panelGrid id="transformPanelGrid" columns="3" cellpadding="4">
+         <h:panelGrid id="transferPanelGrid" columns="3" cellpadding="4">
 
             <h:outputLabel value="Amount" for="transfer" />
-            <p:inputText id="transfer" value="#{accountController.transferAmount}" title="Transfer Amount" />
+            <p:inputText id="transfer" value="#{accountController.transferAmount}" title="#{accountController.modeAsString} Amount" />
             <h:message for="transfer" style="color:red" />
 
-            <p:commandButton value="Deposit" action="#{accountController.deposit}" update="panelGrid,focus,:listForm:listPanel"
-               oncomplete="handleClose(dialogTransferWidget, args);" />
-            <p:commandButton value="Withdraw" action="#{accountController.withdraw}" update="panelGrid,focus,:listForm:listPanel"
+            <p:commandButton value="#{accountController.modeAsString}" action="#{accountController.transfer}" update="panelGrid,focus,:listForm:listPanel"
                oncomplete="handleClose(dialogTransferWidget, args);" />
             <p:commandButton value="Cancel" oncomplete="dialogTransferWidget.hide()" />
          </h:panelGrid>

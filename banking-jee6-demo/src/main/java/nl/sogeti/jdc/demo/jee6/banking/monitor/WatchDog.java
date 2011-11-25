@@ -22,10 +22,6 @@ public class WatchDog {
       this.parameters.put(name, String.valueOf(value));
    }
 
-   public static WatchDog with(String name, Object value) {
-      return new WatchDog(name, value);
-   }
-
    public WatchDog and(String name, Object value) {
       this.parameters.put(name, String.valueOf(value));
       return this;

@@ -40,7 +40,7 @@ public class TransferAuditTest {
    public void setUp() throws Exception {
       this.icMock = mock(InvocationContext.class);
       this.transferServiceMock = mock(TransferService.class);
-      this.transferAudit.auditService = this.transferServiceMock;
+      this.transferAudit.transferService = this.transferServiceMock;
       this.transferAudit.logger = LoggerFactory.getLogger(TransferAuditTest.class);
 
    }

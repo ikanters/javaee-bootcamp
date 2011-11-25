@@ -46,25 +46,30 @@ public class AccountAudit {
    public Object log(InvocationContext ic) throws Exception {
       this.logger.debug("#" + (ic.getMethod() == null ? null : ic.getMethod().getName()) + " is called!!!!");
 
-      List<AccountLog> logs = new ArrayList<AccountLog>();
+      List<AccountLog> accountLogList = new ArrayList<AccountLog>();
 
       Object[] parameters = ic.getParameters();
       if (parametersValid(parameters)) {
          if (parameters.length == 2) {
             Account account = (Account) parameters[0];
             BigDecimal amount = getAmount(parameters);
-            logs.add(newAccountLog(account, amount, ic.getMethod().getName().equals("deposit") ? DebetCreditEnum.DEBET : DebetCreditEnum.CREDIT));
+
+            accountLogList
+                  .add(newAccountLog(account, amount, ic.getMethod().getName().equals("deposit") ? DebetCreditEnum.DEBET : DebetCreditEnum.CREDIT));
+
          } else {
             Account fromAccount = (Account) parameters[0];
             Account toAccount = (Account) parameters[1];
             BigDecimal amount = getAmount(parameters);
-            logs.add(newAccountLog(fromAccount, toAccount, amount, DebetCreditEnum.CREDIT));
-            logs.add(newAccountLog(toAccount, fromAccount, amount, DebetCreditEnum.DEBET));
+
+            accountLogList.add(newAccountLog(fromAccount, toAccount, amount, DebetCreditEnum.CREDIT));
+            accountLogList.add(newAccountLog(toAccount, fromAccount, amount, DebetCreditEnum.DEBET));
          }
       }
       Object result = ic.proceed();
 
-      for (AccountLog accountLog : logs) {
+      // After successful proceed, save the accountLog entities to the database.
+      for (AccountLog accountLog : accountLogList) {
          this.accountLogService.persist(accountLog);
       }
       return result;
