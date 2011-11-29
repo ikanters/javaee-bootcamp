@@ -14,7 +14,6 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import nl.sogeti.jdc.demo.jee6.banking.boundary.BankingServiceLocal;
-import nl.sogeti.jdc.demo.jee6.banking.config.Other;
 import nl.sogeti.jdc.demo.jee6.banking.constants.Constants;
 import nl.sogeti.jdc.demo.jee6.banking.controller.util.ControllerUtil;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
@@ -42,7 +41,6 @@ public class PersonController implements Serializable {
    @EJB
    SlowRestClient slowRestClient;
    @Inject
-   @Other
    int numberOfRows;
 
    private List<Person> allPersons;
