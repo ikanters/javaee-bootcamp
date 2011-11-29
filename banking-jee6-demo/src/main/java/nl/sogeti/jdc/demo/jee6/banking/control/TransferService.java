@@ -9,6 +9,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 import nl.sogeti.jdc.demo.jee6.banking.entity.Transfer;
+import nl.sogeti.jdc.demo.jee6.banking.stereotype.ControlService;
 
 /**
  * @author kanteriv

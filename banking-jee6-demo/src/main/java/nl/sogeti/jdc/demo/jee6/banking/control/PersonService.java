@@ -10,6 +10,7 @@ import javax.ejb.Stateless;
 import javax.persistence.Query;
 
 import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
+import nl.sogeti.jdc.demo.jee6.banking.stereotype.ControlService;
 
 /**
  * @author kanteriv

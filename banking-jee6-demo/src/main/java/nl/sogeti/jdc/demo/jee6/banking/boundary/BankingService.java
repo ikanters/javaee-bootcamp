@@ -19,6 +19,7 @@ import nl.sogeti.jdc.demo.jee6.banking.control.PersonService;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Account;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
 import nl.sogeti.jdc.demo.jee6.banking.exception.TransactionRollbackException;
+import nl.sogeti.jdc.demo.jee6.banking.stereotype.ServiceFacade;
 
 /**
  * @author kanteriv

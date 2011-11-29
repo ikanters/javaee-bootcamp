@@ -18,6 +18,7 @@ import nl.sogeti.jdc.demo.jee6.banking.audit.TransferAudit;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Account;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
 import nl.sogeti.jdc.demo.jee6.banking.monitor.WatchDog;
+import nl.sogeti.jdc.demo.jee6.banking.stereotype.ControlService;
 
 import org.slf4j.Logger;
 
