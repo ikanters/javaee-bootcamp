@@ -61,4 +61,15 @@ public class Configuration {
       return Integer.parseInt(stringValue);
    }
 
+   @Produces
+   @Other
+   public int getOtherInteger(InjectionPoint point) {
+
+      String stringValue = getString(point);
+      if (stringValue == null) {
+         return 1;
+      }
+      return Integer.parseInt(stringValue) + 1;
+   }
+
 }

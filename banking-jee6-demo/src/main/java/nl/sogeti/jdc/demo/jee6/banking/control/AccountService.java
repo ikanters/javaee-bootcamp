@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.persistence.Query;
 
-import nl.sogeti.jdc.demo.jee6.banking.audit.AccountAudit;
 import nl.sogeti.jdc.demo.jee6.banking.audit.TransferAudit;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Account;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
@@ -39,11 +38,11 @@ public class AccountService extends AbstractCrudService<Account> {
       return Account.class;
    }
 
-   @Interceptors({ TransferAudit.class, AccountAudit.class })
+   @Interceptors({ TransferAudit.class })
    public boolean transfer(Account from, Account to, BigDecimal amount) {
       if (from != null && to != null && amount != null) {
          if (!from.substractAmount(amount)) {
-            fireEvent(from, amount);
+            createWatchdog(from, amount);
             return false;
          }
          to.addAmount(amount);
@@ -52,37 +51,33 @@ public class AccountService extends AbstractCrudService<Account> {
       return false;
    }
 
-   @Interceptors(AccountAudit.class)
    public void deposit(Account account, BigDecimal amount) {
       this.logger.debug("deposit(" + account.getNumber() + ", " + amount + ")");
 
       account.addAmount(amount);
    }
 
-   @Interceptors(AccountAudit.class)
    public boolean withdraw(Account account, BigDecimal amount) {
 
       if (account.substractAmount(amount)) {
          return true;
       }
-      // Substract failed... Exceeding the credit limit...
-      fireEvent(account, amount);
+
+      // Substract failed... Create a watchdog
+      WatchDog watchdog = createWatchdog(account, amount);
+      // Fire the watchdog to all its observers.
 
       return false;
    }
 
-   /**
-    * @param account
-    * @param amount
-    */
-   private void fireEvent(Account account, BigDecimal amount) {
+   private WatchDog createWatchdog(Account account, BigDecimal amount) {
       WatchDog watchdog = new WatchDog("account", account.getNumber());
       watchdog.and("clientid", account.getOwner().getClientId());
       watchdog.and("balance", account.getBalance());
       watchdog.and("creditlimit", account.getCreditLimit());
       watchdog.and("substract", amount);
+      return watchdog;
 
-      this.monitoring.fire(watchdog);
    }
 
    @SuppressWarnings("unchecked")

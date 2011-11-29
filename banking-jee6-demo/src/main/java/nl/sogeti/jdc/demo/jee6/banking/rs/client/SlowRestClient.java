@@ -9,10 +9,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.Future;
 
-import javax.ejb.AsyncResult;
-import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -44,14 +41,32 @@ public class SlowRestClient {
       super();
    }
 
-   @Asynchronous
-   public Future<Integer> callSlowMethod(int millis) {
+   /**
+    * Calls a method on a rest service which might be very slow.
+    * 
+    * @return the time spend on this call.
+    */
+   public Integer callSlowMethod() {
+      return callSlowMethod(0);
+   }
 
-      int result = 0;
+   Integer callSlowMethod(int time) {
+
+      long begin = System.currentTimeMillis();
+      String urlString = protocol + "://" + host + ":" + port + contextRoot + "/" + applicationPath + "/" + restPath + "?time=" + time;
+
+      callRestService(urlString);
+
+      int timeSpend = (int) (System.currentTimeMillis() - begin);
+      return timeSpend;
+   }
+
+   /**
+    * @param urlString
+    */
+   private void callRestService(String urlString) {
       try {
-         String urlString = protocol + "://" + host + ":" + port + contextRoot + "/" + applicationPath + "/" + restPath;
-
-         URL url = new URL(urlString + "?time=" + millis);
+         URL url = new URL(urlString);
          HttpURLConnection conn = (HttpURLConnection) url.openConnection();
          conn.setRequestMethod("GET");
 
@@ -66,7 +81,6 @@ public class SlowRestClient {
 
          while ((output = br.readLine()) != null) {
             this.logger.info(output);
-            result = Integer.parseInt(output);
          }
 
          conn.disconnect();
@@ -76,6 +90,5 @@ public class SlowRestClient {
       } catch (IOException e) {
          throw new RuntimeException("Cannot connect???!!!", e);
       }
-      return new AsyncResult<Integer>(result);
    }
 }

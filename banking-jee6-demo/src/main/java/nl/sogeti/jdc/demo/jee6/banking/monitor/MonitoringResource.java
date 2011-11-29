@@ -5,7 +5,6 @@ package nl.sogeti.jdc.demo.jee6.banking.monitor;
 
 import java.util.Map;
 
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -19,7 +18,7 @@ public class MonitoringResource {
    @Inject
    Logger logger;
 
-   public void onNewWatchdog(@Observes WatchDog watchDog) {
+   public void onNewWatchdog(WatchDog watchDog) {
 
       Map<String, String> map = watchDog.asMap();
       if (map != null) {

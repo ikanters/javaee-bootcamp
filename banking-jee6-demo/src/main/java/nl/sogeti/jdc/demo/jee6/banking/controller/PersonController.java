@@ -6,10 +6,6 @@ package nl.sogeti.jdc.demo.jee6.banking.controller;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -18,10 +14,10 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import nl.sogeti.jdc.demo.jee6.banking.boundary.BankingServiceLocal;
+import nl.sogeti.jdc.demo.jee6.banking.config.Other;
 import nl.sogeti.jdc.demo.jee6.banking.constants.Constants;
 import nl.sogeti.jdc.demo.jee6.banking.controller.util.ControllerUtil;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Person;
-import nl.sogeti.jdc.demo.jee6.banking.exception.ApplicationException;
 import nl.sogeti.jdc.demo.jee6.banking.exception.TransactionRollbackException;
 import nl.sogeti.jdc.demo.jee6.banking.rs.client.SlowRestClient;
 
@@ -46,6 +42,7 @@ public class PersonController implements Serializable {
    @EJB
    SlowRestClient slowRestClient;
    @Inject
+   @Other
    int numberOfRows;
 
    private List<Person> allPersons;
@@ -69,17 +66,10 @@ public class PersonController implements Serializable {
             this.bankingService.updatePerson(getSelected());
          }
 
-         // Call a slow (asynchronized) method.
-         Future<Integer> result = this.slowRestClient.callSlowMethod(0);
-         try {
-            setTimespend("" + result.get(500, TimeUnit.MILLISECONDS));
-         } catch (TimeoutException e) {
-            setTimespend("> 500");
-         } catch (InterruptedException e) {
-            throw new ApplicationException("Unexpected interrupt", e);
-         } catch (ExecutionException e) {
-            throw new ApplicationException("Unexpected execution failure", e);
-         }
+         // call below can be very long. Make it asynchronized and wait for max 500 millis.
+         Integer slowServiceResult = this.slowRestClient.callSlowMethod();
+
+         setTimespend("" + slowServiceResult);
 
          selectAll();
          setSelected(getPersonFromList(getSelected().getClientId()));
