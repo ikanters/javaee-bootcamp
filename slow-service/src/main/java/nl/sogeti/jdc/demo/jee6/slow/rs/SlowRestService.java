@@ -42,9 +42,8 @@ public class SlowRestService {
       } catch (InterruptedException e) {
          this.logger.info("The sleep is interrupted... " + e);
       }
-      long end = System.currentTimeMillis();
 
-      return "" + (end - start);
+      return "" + (System.currentTimeMillis() - start);
    }
 
    private int getRandomTime() {
