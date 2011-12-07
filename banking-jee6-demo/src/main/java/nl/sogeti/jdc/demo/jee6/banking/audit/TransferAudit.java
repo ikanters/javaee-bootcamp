@@ -19,9 +19,9 @@ import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 
 import nl.sogeti.jdc.demo.jee6.banking.control.TransferService;
 import nl.sogeti.jdc.demo.jee6.banking.entity.Account;
@@ -95,8 +95,8 @@ public class TransferAudit {
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             producer = session.createProducer(this.destination);
 
-            final TextMessage message = session.createTextMessage(transfer.toString());
-            // put the message on the queue
+            final Message message = session.createObjectMessage(transfer);
+            // send the message
             producer.send(message);
 
          } catch (JMSException e) {

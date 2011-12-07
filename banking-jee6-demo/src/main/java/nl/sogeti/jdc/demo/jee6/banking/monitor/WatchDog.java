@@ -14,10 +14,6 @@ public class WatchDog {
 
    private final Map<String, String> parameters = new HashMap<String, String>();
 
-   /**
-    * @param name
-    * @param value
-    */
    public WatchDog(String name, Object value) {
       this.parameters.put(name, String.valueOf(value));
    }

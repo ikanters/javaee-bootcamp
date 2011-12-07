@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 /**
  * @author kanteriv
@@ -25,6 +27,8 @@ import javax.persistence.PrePersist;
             + Account.NUMBER_PARAM) })
 public class Account extends AbstractEntity {
    private static final long serialVersionUID = -1957693851717081899L;
+   private static final int MIN_CREDITLIMIT = 0;
+   private static final int MAX_CREDITLIMIT = 10000;
    public static final String FIND_ACCOUNTS_FOR_PERSON_NAMEDQUERY = "findAccountsForPerson";
    public static final String FIND_ACCOUNT_BY_NUMBER_NAMEDQUERY = "findAccountByNumber";
    public static final String OWNER_PARAM = "owner";
@@ -37,6 +41,8 @@ public class Account extends AbstractEntity {
    @Column(nullable = false, precision = 12, scale = 2)
    private BigDecimal balance = BigDecimal.ZERO;
    @Column(nullable = false, precision = 12, scale = 2)
+   @Min(value = MIN_CREDITLIMIT, message = MIN_CREDITLIMIT + " is the minimum")
+   @Max(value = MAX_CREDITLIMIT, message = MAX_CREDITLIMIT + " is the maximum")
    private BigDecimal creditLimit = BigDecimal.ZERO;
 
    protected Account() {

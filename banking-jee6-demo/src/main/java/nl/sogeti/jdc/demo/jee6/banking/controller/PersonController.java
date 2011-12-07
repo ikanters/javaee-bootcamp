@@ -6,6 +6,10 @@ package nl.sogeti.jdc.demo.jee6.banking.controller;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -65,9 +69,9 @@ public class PersonController implements Serializable {
          }
 
          // call below can be very long. Make it asynchronized and wait for max 500 millis.
-         Integer slowServiceResult = this.slowRestClient.callSlowMethod();
+         Future<Integer> callSlowMethod = this.slowRestClient.callSlowMethod();
 
-         setTimespend("" + slowServiceResult);
+         setTimespend("" + callSlowMethod.get(500, TimeUnit.MILLISECONDS));
 
          selectAll();
          setSelected(getPersonFromList(getSelected().getClientId()));
@@ -77,6 +81,17 @@ public class PersonController implements Serializable {
 
          this.controllerUtil.addMessage(e.getMessage());
          this.controllerUtil.addCallBackParam(Constants.CALLBACK_PARAM_SAVED_FAILED, Boolean.TRUE);
+      } catch (InterruptedException e) {
+         // TODO Auto-generated catch block
+         throw new RuntimeException("TODO (kanteriv) handle this Auto-generated exception", e);
+
+      } catch (ExecutionException e) {
+         // TODO Auto-generated catch block
+         throw new RuntimeException("TODO (kanteriv) handle this Auto-generated exception", e);
+
+      } catch (TimeoutException e) {
+         // TODO Auto-generated catch block
+         setTimespend("> 500");
       }
    }
 

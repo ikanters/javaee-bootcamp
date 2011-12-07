@@ -9,7 +9,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.Future;
 
+import javax.ejb.AsyncResult;
+import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -46,8 +49,9 @@ public class SlowRestClient {
     * 
     * @return the time spend on this call.
     */
-   public Integer callSlowMethod() {
-      return callSlowMethod(0);
+   @Asynchronous
+   public Future<Integer> callSlowMethod() {
+      return new AsyncResult<Integer>(callSlowMethod(0));
    }
 
    Integer callSlowMethod(int time) {

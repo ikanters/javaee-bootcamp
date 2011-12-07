@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 
 import org.slf4j.Logger;
@@ -27,15 +28,22 @@ public class TransferMDB implements MessageListener {
 
       if (message instanceof TextMessage) {
          logMessage((TextMessage) message);
+      } else if (message instanceof ObjectMessage) {
+         logMessage((ObjectMessage) message);
       }
    }
 
-   /**
-    * @param msg
-    */
    private void logMessage(TextMessage msg) {
       try {
          this.logger.info("Message received: " + msg.getText());
+      } catch (JMSException e) {
+         throw new RuntimeException("TODO (kanteriv) handle this Auto-generated exception", e);
+      }
+   }
+
+   private void logMessage(ObjectMessage msg) {
+      try {
+         this.logger.info("Message received: " + msg.getObject());
       } catch (JMSException e) {
          throw new RuntimeException("TODO (kanteriv) handle this Auto-generated exception", e);
       }

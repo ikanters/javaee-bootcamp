@@ -12,6 +12,7 @@ import javax.ejb.EJB;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 
 import nl.sogeti.jdc.demo.jee6.banking.constants.DebetCreditEnum;
@@ -42,6 +43,7 @@ public class AccountAudit {
     * @return The result of the proceeded invocationContext.
     * @throws Exception
     */
+   @AroundInvoke
    public Object log(InvocationContext ic) throws Exception {
 
       this.logger.debug("#" + (ic.getMethod() == null ? null : ic.getMethod().getName()) + " is called!!!!");
@@ -58,6 +60,7 @@ public class AccountAudit {
          this.accountLogService.persist(accountLog);
       }
       return result;
+
    }
 
    private void addAccountLogsFromInvocationContext(List<AccountLog> accountLogList, InvocationContext ic) {
